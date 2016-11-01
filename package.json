@@ -1,0 +1,44 @@
+{
+  "name": "document-management-system-api",
+  "version": "0.0.1",
+  "description": "An API for  document management system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andela-oolutola/document-management-system-api.git"
+  },
+  "keywords": [
+    "nodejs",
+    "javascript",
+    "expressjs",
+    "sequelize",
+    "pgsql",
+    "document-management-system"
+  ],
+  "author": "oreofeoluwapo.olutola@andela.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andela-oolutola/document-management-system-api/issues"
+  },
+  "homepage": "https://github.com/andela-oolutola/document-management-system-api#readme",
+  "dependencies": {
+    "bcryptjs": "^2.3.0",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "jsonwebtoken": "^7.1.9",
+    "morgan": "^1.7.0",
+    "pg": "^6.1.0",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.24.6"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.14",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.1.2",
+    "supertest": "^2.0.1"
+  }
+}
