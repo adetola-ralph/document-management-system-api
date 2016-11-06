@@ -6,6 +6,10 @@ const bodyParser = require('body-parser');
 const morgan     = require('morgan');
 const port       = 8080;
 
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 // Use morgan to diplay requests from the client
 app.use(morgan('dev'));
 
