@@ -105,5 +105,5 @@ describe('User', () => {
       .end((err, res) => {
         done(err);
       });
-  })
+  });
 });
