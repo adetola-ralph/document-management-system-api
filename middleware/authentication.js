@@ -1,6 +1,9 @@
 'use strict';
 
-const jwt = require('jsonwebtoken');
+const jwt    = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+const secret = process.env.SECRET;
 
 const auth = (req, res, next) => {
   // Get the token for request
@@ -8,7 +11,7 @@ const auth = (req, res, next) => {
 
   if (token) {
     // TODO: reimplement secret for the application
-    jwt.verify(token, 'superSecret', (err, decoded) => {
+    jwt.verify(token, secret, (err, decoded) => {
       if (err) {
         return res.status(403).json({
           success: false,
