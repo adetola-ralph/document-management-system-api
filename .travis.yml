@@ -1,6 +1,8 @@
 language: node_js
 node_js:
     - "6.0"
+before_install:
+    - npm install sequelize-cli -g
 services:
     - postgresql
 script:
