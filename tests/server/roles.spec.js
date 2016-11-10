@@ -10,7 +10,7 @@ const api       = supertest(server);
 
 const roleData  = require('./data/role-data');
 
-describe('Roles', () => {
+xdescribe('Roles', () => {
   it('each role should have a unique title', (done) => {
     api
       .post('/api/roles/')

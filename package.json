@@ -4,8 +4,9 @@
   "description": "An API for  document management system",
   "main": "index.js",
   "scripts": {
-    "set-db": "dropdb --if-exists document_db_test && createdb document_db_test",
-    "migration": "npm run-script set-db && sequelize db:migrate",
+    "set-test-db": "dropdb --if-exists document_db_test && createdb document_db_test",
+    "set-test": "dropdb --if-exists document_db && createdb document_db",
+    "migration": "npm run-script set-test-db && sequelize db:migrate",
     "pretest": "NODE_ENV=test npm run-script migration",
     "test": "NODE_ENV=test mocha tests/server/tests.spec.js",
     "start": "nodemon index.js",

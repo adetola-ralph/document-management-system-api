@@ -1,7 +1,4 @@
-// POST /users/ Creates a new user.
-// Write a test that validates that a new user created is unique.
 // Write a test that validates that a new user created has a role defined. **
-// Write a test that validates that a new user created both first and last names.
 // Write a test that validates that all users are returned.
 // GET /users/ Find matching instances of user.
 // GET /users/<id> Find user.
@@ -38,7 +35,6 @@ describe('User', () => {
       .expect(409)
       .end((err, res) => {
         expect(res.body.message).to.equal('User already exists');
-        done(err);
       });
 
     //duplicate username test
@@ -67,43 +63,43 @@ describe('User', () => {
       });
   });
 
-  // it('should return all the users in the database', (done) => {
-  //   api
-  //     .get('/api/users/')
-  //     .expect(200)
-  //     .end((err, res) => {
-  //       expect(res.data.length).to.equal(3);
-  //       done(err);
-  //     });
-  // });
-  //
-  // it('should find a user', (done) => {
-  //   api
-  //   .get('/api/users/1')
-  //   .expect(200)
-  //   .end((err, res) => {
-  //     done(err);
-  //   });
-  // });
-  //
-  // it('should update user attribute', (done) => {
-  //   api
-  //     .put('/api/users/1')
-  //     .send({
-  //       lastname: 'Adetola'
-  //     })
-  //     .expect(204)
-  //     .end((err, res) => {
-  //       done(err);
-  //     });
-  // });
-  //
-  // it('should delete an exisiting user', (done) => {
-  //   api
-  //     .delete('/api/users/3')
-  //     .expect(200)
-  //     .end((err, res) => {
-  //       done(err);
-  //     });
-  // });
+  xit('should return all the users in the database', (done) => {
+    api
+      .get('/api/users/')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.data.length).to.equal(3);
+        done(err);
+      });
+  });
+
+  xit('should find a user', (done) => {
+    api
+    .get('/api/users/1')
+    .expect(200)
+    .end((err, res) => {
+      done(err);
+    });
+  });
+
+  xit('should update user attribute', (done) => {
+    api
+      .put('/api/users/1')
+      .send({
+        lastname: 'Adetola'
+      })
+      .expect(204)
+      .end((err, res) => {
+        done(err);
+      });
+  });
+
+  xit('should delete an exisiting user', (done) => {
+    api
+      .delete('/api/users/3')
+      .expect(200)
+      .end((err, res) => {
+        done(err);
+      });
+  });
 });
