@@ -24,9 +24,8 @@ module.exports = function(sequelize, DataTypes) {
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      set: (value) => {
-        if(!value) return '';
-        return bcrypt.hashSync(value, 10);
+      set: function (value){
+        this.setDataValue('password', bcrypt.hashSync(value, 10));
       }
     },
     roleId: {
@@ -37,9 +36,9 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Users.hasMany(models.Documents, {
-          onDelete: 'cascade'
+          onDelete: 'cascade',
+          foreignKey: 'ownerId'
         });
-        Users.hasOne(models.Roles);
       }
     }
   });
