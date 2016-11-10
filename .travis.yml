@@ -4,6 +4,6 @@ node_js:
 services:
     - postgresql
 script:
-    -npm test
+    - npm test
 after_success:
   - npm run coveralls
