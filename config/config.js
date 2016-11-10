@@ -1,3 +1,5 @@
+const dotenv     = require('dotenv').config();
+
 module.exports = {
   'development': {
     'username': 'postgres_user',
@@ -8,8 +10,8 @@ module.exports = {
     'dialect': 'postgres'
   },
   'test': {
-    'username': 'postgres_user',
-    'password': 'MsniCUO12*',
+    'username': process.env.TEST_DB_USER ||'postgres',
+    'password': process.env.TEST_DB_PASSWORD || null,
     'database': 'document_db_test',
     'host': 'localhost',
     'port': '5432',
