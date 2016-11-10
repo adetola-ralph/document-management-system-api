@@ -14,7 +14,12 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Documents.hasOne(models.Users);
+        Documents.belongsTo(models.Users,{
+          as: 'owner',
+          foreignKey: {
+            allowNull: false
+          }
+        });
       }
     }
   });
