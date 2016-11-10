@@ -23,7 +23,7 @@ const users = {
       const token = req.headers['x-access-token'];
       const decoded = jwt.verify(token, secret);
 
-      if (decoded && decoded.roleId !== '1') {
+      if (decoded && decoded.roleId !== 1) {
         res.status(403)
           .json({
             success: 'false',
