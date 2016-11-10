@@ -15,7 +15,9 @@ const users = {
   // called for signup
   create: (req, res) => {
     let user = req.body;
-    userHelper.checkDetails(req, res);
+    if (userHelper.checkDetails(req, res)) {
+      return;
+    }
 
     if (user.roleId === 1) {
       const token = req.headers['x-access-token'];
@@ -54,8 +56,7 @@ const users = {
             message: 'User already exists'
           });
         }
-      }).catch((error) => {
-        console.log(error);
+      }).catch(() => {
         res.status(500).json({
           success: false,
           message: 'Server error'

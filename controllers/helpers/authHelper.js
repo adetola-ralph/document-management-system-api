@@ -1,8 +1,7 @@
-const userHelper = {
-  checkDetails: (req, res) => {
+const authHelper = {
+  checkLoginDetails: (req, res) => {
     let user = req.body;
-    if (!(user.firstname && user.lastname && user.username
-      && user.password && user.roleId && user.email)) {
+    if (!(user.username && user.password)) {
       res.status(400)
         .json({
           success: false,
@@ -14,4 +13,4 @@ const userHelper = {
   }
 };
 
-module.exports = userHelper;
+module.exports = authHelper;
