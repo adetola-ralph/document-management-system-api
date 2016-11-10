@@ -8,11 +8,12 @@ module.exports = {
     'dialect': 'postgres'
   },
   'test': {
-    'username': 'update me',
-    'password': 'update me',
-    'database': 'update_me',
-    'host': 'update me',
-    'dialect': 'update me'
+    'username': 'postgres_user',
+    'password': 'MsniCUO12*',
+    'database': 'document_db_test',
+    'host': 'localhost',
+    'port': '5432',
+    'dialect': 'postgres'
   },
   'production': {
     'username': 'update me',

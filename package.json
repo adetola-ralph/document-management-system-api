@@ -4,8 +4,12 @@
   "description": "An API for  document management system",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests/server",
-    "coverage": "rm -rf /coverage && istanbul cover node_modules/.bin/_mocha --report lcovonly tests/server",
+    "set-db": "dropdb --if-exists document_db_test && createdb document_db_test",
+    "migration": "npm run-script set-db && sequelize db:migrate",
+    "pretest": "NODE_ENV=test npm run-script migration",
+    "test": "NODE_ENV=test mocha tests/server",
+    "start": "nodemon index.js",
+    "coverage": "rm -rf /coverage && istanbul cover node_modules/.bin/_mocha --report lcovonly tests/server/tests.js",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
