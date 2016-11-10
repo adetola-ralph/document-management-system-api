@@ -10,8 +10,8 @@ module.exports = {
     'dialect': 'postgres'
   },
   'test': {
-    'username': 'postgres_user',
-    'password': process.env.DB_PASSWORD || null,
+    'username': process.env.TEST_DB_USER ||'postgres',
+    'password': process.env.TEST_DB_PASSWORD || null,
     'database': 'document_db_test',
     'host': 'localhost',
     'port': '5432',
