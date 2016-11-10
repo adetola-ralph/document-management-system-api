@@ -1,7 +1,4 @@
-// POST /users/ Creates a new user.
-// Write a test that validates that a new user created is unique.
 // Write a test that validates that a new user created has a role defined. **
-// Write a test that validates that a new user created both first and last names.
 // Write a test that validates that all users are returned.
 // GET /users/ Find matching instances of user.
 // GET /users/<id> Find user.
@@ -24,8 +21,8 @@ describe('User', () => {
       .send(userData.normalUser1)
       .expect(201)
       .end((err, res) => {
-        expect(res.message).to.equal('User created');
-        expect(res.data).to.have.property('id');
+        expect(res.body.message).to.equal('User created');
+        expect(res.body.data).to.have.property('id');
         done(err);
       });
   });
@@ -37,8 +34,7 @@ describe('User', () => {
       .send(userData.duplicateUser2)
       .expect(409)
       .end((err, res) => {
-        expect(res.message).to.equal('Duplicate email address');
-        done(err);
+        expect(res.body.message).to.equal('User already exists');
       });
 
     //duplicate username test
@@ -47,7 +43,7 @@ describe('User', () => {
       .send(userData.duplicateUser1)
       .expect(409)
       .end((err, res) => {
-        expect(res.message).to.equal('Duplicate username');
+        expect(res.body.message).to.equal('User already exists');
         done(err);
       });
   });
@@ -58,16 +54,16 @@ describe('User', () => {
       .send(userData.normalUser2)
       .expect(201)
       .end((err, res) => {
-        expect(res.message).to.equal('User created');
-        expect(res.data).to.have.property('firstname');
-        expect(res.data.firstname).to.equal('Winner');
-        expect(res.data).to.have.property('lastname');
-        expect(res.data.firstname).to.equal('Bolorunduro');
+        expect(res.body.message).to.equal('User created');
+        expect(res.body.data).to.have.property('firstname');
+        expect(res.body.data.firstname).to.equal('Winner');
+        expect(res.body.data).to.have.property('lastname');
+        expect(res.body.data.lastname).to.equal('Bolorunduro');
         done(err);
       });
   });
 
-  it('should return all the users in the database', (done) => {
+  xit('should return all the users in the database', (done) => {
     api
       .get('/api/users/')
       .expect(200)
@@ -77,7 +73,7 @@ describe('User', () => {
       });
   });
 
-  it('should find a user', (done) => {
+  xit('should find a user', (done) => {
     api
     .get('/api/users/1')
     .expect(200)
@@ -86,7 +82,7 @@ describe('User', () => {
     });
   });
 
-  it('should update user attribute', (done) => {
+  xit('should update user attribute', (done) => {
     api
       .put('/api/users/1')
       .send({
@@ -98,7 +94,7 @@ describe('User', () => {
       });
   });
 
-  it('should delete an exisiting user', (done) => {
+  xit('should delete an exisiting user', (done) => {
     api
       .delete('/api/users/3')
       .expect(200)

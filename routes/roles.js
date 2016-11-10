@@ -4,7 +4,7 @@ const roleCtr = require('./../controllers/roles.js');
 const authentication = require('./../middleware/authentication');
 const authorisation  = require('./../middleware/authorisation');
 
-const roleRouter = function (router) {
+const roleRouter = (router) => {
   router
     .route('/roles')
     .get(authentication, roleCtr.index)

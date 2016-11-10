@@ -6,6 +6,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true
     }
+  }, {
+    classMethods: {
+      associate: (models) => {
+        Roles.hasMany(models.Users, {
+          foreignKey: 'roleId'
+        });
+      }
+    }
   });
   return Roles;
 };
