@@ -15,11 +15,90 @@ const expect        = require('chai').expect;
 const supertest     = require('supertest');
 const server        = require('./../../index');
 const api           = supertest(server);
+const request       = require('superagent');
 
 const documentData  = require('./data/document-data.js');
+const userData      = require('./data/user-data.js');
+let adminToken, normalToken1, normalToken2;
 
-xdescribe('Document', () => {
-  it('should have a published by date', (done) => {
+describe('Document', () => {
+  before((done) => {
+    request
+      .post('http://localhost:8080/api/users/login/')
+      .send({
+        username: userData.adminUser.username,
+        password: userData.adminUser.password
+      })
+      .end(function(err, res){
+        console.log(err)
+        adminToken = res.body.data;
+        done(err);
+      });
+  });
+
+  before((done) => {
+    request
+      .post('http://localhost:8080/api/users/login/')
+      .send({
+        username: userData.normalUser1.username,
+        password: userData.normalUser1.password
+      })
+      .end(function(err, res){
+        normalToken1 = res.body.data;
+        done(err);
+      });
+  });
+
+  before((done) => {
+    request
+      .post('http://localhost:8080/api/users/login/')
+      .send({
+        username: userData.normalUser3.username,
+        password: userData.normalUser3.password
+      })
+      .end(function(err, res){
+        normalToken2 = res.body.data;
+        done(err);
+      });
+  });
+
+  it('Only registered users can create documents', (done) => {
+    api
+      .post('/api/documents/')
+      .send(documentData.document1)
+      .expect(403)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Token not provided');
+        done(err);
+      });
+  });
+
+  it('Registered users can create documents', (done) => {
+    api
+      .post('/api/documents/')
+      .set('x-access-token', normalToken1)
+      .send(documentData.document1)
+      .expect(201)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Document created');
+        done(err);
+      });
+  });
+
+  it('Should not allow creation of documents with duplicate titles', (done) => {
+    api
+      .post('/api/documents/')
+      .set('x-access-token', normalToken1)
+      .send(documentData.document1)
+      .expect(409)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('A document wih the title exists');
+        done(err);
+      });
+  });
+
+
+  xit('should have a published by date', (done) => {
     api
       .post('/api/documents/')
       .send()
@@ -31,7 +110,7 @@ xdescribe('Document', () => {
       });
   });
 
-  it('should return all relevant documents', (done) => {
+  xit('should return all relevant documents', (done) => {
     api
       .get('/api/documents/')
       .send()
@@ -43,7 +122,7 @@ xdescribe('Document', () => {
       });
   });
 
-  it('should find a document by its id', (done) => {
+  xit('should find a document by its id', (done) => {
     api
       .get('/api/documents/1')
       .send()
@@ -55,7 +134,7 @@ xdescribe('Document', () => {
       });
   });
 
-  it('should update document attribute', (done) => {
+  xit('should update document attribute', (done) => {
     api
       .put('/api/documents/1')
       .send({
@@ -67,7 +146,7 @@ xdescribe('Document', () => {
       });
   });
 
-  it('should delete an exisiting document', (done) => {
+  xit('should delete an exisiting document', (done) => {
     api
       .delete('/api/documents/3')
       .expect(200)
@@ -76,7 +155,7 @@ xdescribe('Document', () => {
       });
   });
 
-  it('should return all relevant documents belonging to a user', (done) => {
+  xit('should return all relevant documents belonging to a user', (done) => {
     api
       .get('/api/user/1/documents/')
       .send()
