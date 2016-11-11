@@ -10,6 +10,10 @@ module.exports = function(sequelize, DataTypes) {
     ownerId: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    access: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   }, {
     classMethods: {
