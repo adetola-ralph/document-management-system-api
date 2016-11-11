@@ -7,37 +7,85 @@ const expect    = require('chai').expect;
 const supertest = require('supertest');
 const server    = require('./../../index');
 const api       = supertest(server);
+const jwt       = require('jsonwebtoken');
+const dotenv    = require('dotenv').config();
+
+const secret    = process.env.SECRET;
 
 const roleData  = require('./data/role-data');
+const userData  = require('./data/user-data');
+const models = require('./../../models/index');
+const userModel = models.Users;
+const roleModel = models.Roles;
+let adminToken;
 
-xdescribe('Roles', () => {
+before((done) => {
+  roleModel.create({title: 'admin'}).then((role) => {});
+    userModel.create(userData.adminUser).then((user) => {
+      console.log(`${user.username} created`);
+      adminToken = jwt.sign(user.dataValues, secret, {
+        expiresIn: '24h'
+      });
+      done();
+    });
+
+});
+
+describe('Roles', () => {
   it('each role should have a unique title', (done) => {
     api
       .post('/api/roles/')
-      .send(roleData.testRole)
+      .set('x-access-token', adminToken)
+      .send(roleData.guestRole)
       .expect(201)
       .end((err, res) => {
-        expect(res.message).to.equal(`${roleData.testRole.title} role created successfully`);
-        expect(res.data.title).to.equal(`${roleData.testRole.title}`);
+        expect(res.body.message).to.equal(`${roleData.guestRole.title} role created successfully`);
+        expect(res.body.data.title).to.equal(`${roleData.guestRole.title}`);
         done(err);
       });
 
-      api
-        .post('/api/roles/')
-        .send(roleData.guestRole)
-        .expect(409)
-        .end((err, res) => {
-          expect(res.message).to.equal(`${roleData.guestRole.title} role exists`);
-          done(err);
-        });
+    api
+      .post('/api/roles/')
+      .set('x-access-token', adminToken)
+      .send(roleData.guestRole)
+      .expect(409)
+      .end((err, res) => {
+        expect(res.body.message).to.equal(`${roleData.guestRole.title} role exists`);
+        done(err);
+      });
   });
 
   it('should return all roles when Roles.all is called', (done) => {
     api
       .get('/api/roles/')
+      .set('x-access-token', adminToken)
       .expect(200)
       .end((err, res) => {
-        expect(res.data).to.equal(4);
+        expect(res.body.data.length).to.equal(2);
+        done(err);
+      });
+  });
+
+  it('can get roles by id', (done) => {
+    api
+      .get('/api/roles/1')
+      .set('x-access-token', adminToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('role retreived');
+        expect(res.body.data.title).to.equal('admin');
+        done(err);
+      });
+  });
+
+  it('can update a role\'s title', (done) => {
+    api
+      .put('/api/roles/2')
+      .set('x-access-token', adminToken)
+      .send({title: 'regular'})
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('updated successfully');
         done(err);
       });
   });
