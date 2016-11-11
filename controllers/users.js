@@ -10,7 +10,22 @@ const secret     = process.env.SECRET;
 
 const users = {
   index: (req, res) => {
-
+    userModel.findAll()
+      .then((users) => {
+        res.status(200)
+          .json({
+            success: true,
+            message: 'All users retrieved',
+            data: users
+          });
+      })
+      .catch(() => {
+        res.status(500)
+          .json({
+            success: false,
+            message: 'Server error'
+          });
+      });
   },
   // called for signup
   create: (req, res) => {
@@ -49,7 +64,7 @@ const users = {
                 message: 'User created',
                 data: newUser
               });
-            })
+            });
         } else {
           res.status(409).json({
             success: false,
@@ -62,6 +77,134 @@ const users = {
           message: 'Server error'
         });
       });
+  },
+
+  show: (req, res) => {
+    const userId = req.params.id;
+    const decoded = req.decoded;
+
+
+    models.Roles.findOne({
+      where: {
+        id: decoded.roleId
+      }
+    }).then((role) => {
+      if (role) {
+        if(decoded.id === Number(userId) || role.title === 'admin') {
+          userModel
+            .findOne({
+              where:{
+                id: userId
+              }
+            }).then((user) => {
+              if (user) {
+                res.status(200).json({
+                  success: true,
+                  message: 'User retrieved',
+                  data: user
+                });
+              }
+            });
+        } else {
+          res.status(403).json({
+            success: false,
+            message: 'You\'re not allowed to perform this action'
+          });
+        }
+      } else {
+        res.status(404).json({
+          success: false,
+          message: 'Role does not exist'
+        });
+      }
+    }).catch(() => {
+      res.status(500).json({
+        success: false,
+        message: 'Server error',
+      });
+    });
+  },
+  update: (req, res) => {
+    const userId = req.params.id;
+    const decoded = req.decoded;
+
+    models.Roles.findOne({
+      where: {
+        id: decoded.roleId
+      }
+    }).then((role) => {
+      if (role) {
+        if(decoded.id === Number(userId) || role.title === 'admin') {
+          userModel.update(req.body, {
+            where: {
+              id: userId
+            },
+            returning: true,
+            plain: true
+          }).then((updatedUser) => {
+            res.status(200).json({
+              success: true,
+              message: 'User detail update',
+              data: updatedUser[1].dataValues
+            });
+          }).catch((err) => {
+            res.status(500).json({
+              success: false,
+              message: 'Update failed',
+              data: err
+            });
+          });
+        } else {
+          res.status(403).json({
+            success: false,
+            message: 'You\'re not allowed to perform this action'
+          });
+        }
+      } else {
+        res.status(404).json({
+          success: false,
+          message: 'Role does not exist'
+        });
+      }
+    }).catch(() => {
+      res.status(500).json({
+        success: false,
+        message: 'Server error',
+      });
+    });
+  },
+  delete: (req, res) => {
+    const userId = req.params.id;
+
+    if (userId === req.decoded.id) {
+      res.status(403).json({
+        success: false,
+        message: 'You\'re not allowed to perform this action'
+      });
+    } else {
+      userModel.destroy({
+        where: {
+          id: userId
+        }
+      }).then((result) => {
+        if (result > 0) {
+          res.status(200).json({
+            success: true,
+            message: 'User deleted'
+          });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: 'User doesn\'t exist'
+          });
+        }
+      }).catch(() => {
+        res.status(500).json({
+          success: false,
+          message: 'Server error'
+        });
+      });
+    }
   }
 };
 
