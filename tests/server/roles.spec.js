@@ -18,6 +18,7 @@ const models = require('./../../models/index');
 const userModel = models.Users;
 const roleModel = models.Roles;
 let adminToken;
+let normalToken;
 
 before((done) => {
   roleModel.create({title: 'admin'}).then((role) => {});
@@ -28,7 +29,17 @@ before((done) => {
       });
       done();
     });
+});
 
+before((done) => {
+  roleModel.create({title: 'normal'}).then((role) => {});
+    userModel.create(userData.normalUser3).then((user) => {
+      console.log(`${user.username} created`);
+      normalToken = jwt.sign(user.dataValues, secret, {
+        expiresIn: '24h'
+      });
+      done();
+    });
 });
 
 describe('Roles', () => {
@@ -43,7 +54,9 @@ describe('Roles', () => {
         expect(res.body.data.title).to.equal(`${roleData.guestRole.title}`);
         done(err);
       });
+  });
 
+  it('should not allow duplicate roles', (done) => {
     api
       .post('/api/roles/')
       .set('x-access-token', adminToken)
@@ -61,7 +74,7 @@ describe('Roles', () => {
       .set('x-access-token', adminToken)
       .expect(200)
       .end((err, res) => {
-        expect(res.body.data.length).to.equal(2);
+        expect(res.body.data.length).to.equal(3);
         done(err);
       });
   });
@@ -88,5 +101,53 @@ describe('Roles', () => {
         expect(res.body.message).to.equal('updated successfully');
         done(err);
       });
+  });
+
+  describe('Unauthorised users', () => {
+    it('shouldn\'t be able to create new roles', (done) => {
+      api
+        .post('/api/roles/')
+        .set('x-access-token', normalToken)
+        .send(roleData.guestRole)
+        .expect(403)
+        .end((err, res) => {
+          expect(res.body.message).to.equal('Not authorised to perform this action');
+          done(err);
+        });
+    });
+
+    it('shouldn\'t return all roles when Roles.all is called', (done) => {
+      api
+        .get('/api/roles/')
+        .set('x-access-token', normalToken)
+        .expect(403)
+        .end((err, res) => {
+          expect(res.body.message).to.equal('Not authorised to perform this action');
+          done(err);
+        });
+    });
+
+    it('shouldn\'t be able get any role by id', (done) => {
+      api
+        .get('/api/roles/1')
+        .set('x-access-token', normalToken)
+        .expect(403)
+        .end((err, res) => {
+          expect(res.body.message).to.equal('Not authorised to perform this action');
+          done(err);
+        });
+    });
+
+    it('shouldn\'t be able to update a role\'s title', (done) => {
+      api
+        .put('/api/roles/2')
+        .set('x-access-token', normalToken)
+        .send({title: 'regular'})
+        .expect(403)
+        .end((err, res) => {
+          expect(res.body.message).to.equal('Not authorised to perform this action');
+          done(err);
+        });
+    });
   });
 });
