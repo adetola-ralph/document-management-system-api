@@ -17,6 +17,15 @@ module.exports = {
     password: 'Pasword12345',
     roleId: 2
   },
+  // user with normal role 3
+  normalUser3: {
+    firstname: 'Adunoluwa',
+    lastname: 'Bolorunduro',
+    username: 'adun_luwa',
+    email: 'adunoluwa@gmail.com',
+    password: 'Password',
+    roleId: 2
+  },
   // administatrive role
   adminUser: {
     firstname: 'Terwase',
