@@ -142,7 +142,7 @@ describe('User', () => {
 
   it('Admin users should be able to update their details', (done) => {
     api
-      .put('/api/users/2')
+      .put('/api/users/4')
       .set('x-access-token', adminToken)
       .send({
         firstname: 'firstname'

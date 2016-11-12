@@ -19,6 +19,9 @@ const request       = require('superagent');
 
 const documentData  = require('./data/document-data.js');
 const userData      = require('./data/user-data.js');
+
+const docSeeder     = require('./../../seeders/docSeeder');
+
 let adminToken, normalToken1, normalToken2;
 
 describe('Document', () => {
@@ -62,6 +65,12 @@ describe('Document', () => {
       });
   });
 
+  before((done) => {
+    console.log('running doc seed')
+    docSeeder.startSeed();
+    done();
+  });
+
   it('Only registered users can create documents', (done) => {
     api
       .post('/api/documents/')
@@ -77,7 +86,7 @@ describe('Document', () => {
     api
       .post('/api/documents/')
       .set('x-access-token', normalToken1)
-      .send(documentData.document1)
+      .send(documentData.documentx)
       .expect(201)
       .end((err, res) => {
         expect(res.body.message).to.equal('Document created');
@@ -89,7 +98,7 @@ describe('Document', () => {
     api
       .post('/api/documents/')
       .set('x-access-token', normalToken1)
-      .send(documentData.document1)
+      .send(documentData.documentx)
       .expect(409)
       .end((err, res) => {
         expect(res.body.message).to.equal('A document wih the title exists');
@@ -97,15 +106,15 @@ describe('Document', () => {
       });
   });
 
-
-  xit('should have a published by date', (done) => {
+  it('should have a published by date', (done) => {
     api
       .post('/api/documents/')
-      .send()
+      .set('x-access-token', normalToken2)
+      .send(documentData.documenty)
       .expect(201)
       .end((err, res) => {
-        expect(res.message).to.equal('Document created');
-        expect(res.data).to.have.property('createdAt');
+        expect(res.body.message).to.equal('Document created');
+        expect(res.body.data).to.have.property('createdAt');
         done(err);
       });
   });
@@ -134,6 +143,18 @@ describe('Document', () => {
       });
   });
 
+  xit('should return all relevant documents belonging to a user', (done) => {
+    api
+      .get('/api/user/3/documents/')
+      .send()
+      .expect(200)
+      .end((err, res) => {
+        expect(res.message).to.equal('Documents retrieved');
+        expect(res.data).to.equal();
+        done(err);
+      });
+  });
+
   xit('should update document attribute', (done) => {
     api
       .put('/api/documents/1')
@@ -155,15 +176,4 @@ describe('Document', () => {
       });
   });
 
-  xit('should return all relevant documents belonging to a user', (done) => {
-    api
-      .get('/api/user/1/documents/')
-      .send()
-      .expect(200)
-      .end((err, res) => {
-        expect(res.message).to.equal();
-        expect(res.data).to.equal();
-        done(err);
-      });
-  });
 });
