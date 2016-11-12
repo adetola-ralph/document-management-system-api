@@ -52,7 +52,87 @@ const documents = {
   },
 
   show: (req, res) => {
+    const decodedUser = req.decoded;
+    const docId = req.params.id;
 
+    docModel.findOne({
+      where: {
+        id: docId
+      }
+    }).then((document) => {
+      if (document) {
+        if (document.ownerId === decodedUser.id  || document.access === 'public') {
+          res.status(200).json({
+            success: true,
+            message: 'Document found',
+            data: document
+          });
+        }
+        else {
+          models.Roles.findById(decodedUser.roleId)
+            .then((role) => {
+              if (role) {
+                if (role.title === 'admin') {
+                  res.status(200).json({
+                    success: true,
+                    message: 'Document found',
+                    data: document
+                  });
+                } else if(document.access === 'role') {
+                  models.Users.findById(document.ownerId)
+                    .then((user) => {
+                      if(user.roleId === decodedUser.roleId) {
+                        res.status(200).json({
+                          success: true,
+                          message: 'Document found',
+                          data: document
+                        });
+                      } else {
+                        res.status(403).json({
+                          success: false,
+                          message: 'You\'re not authorised to access this document'
+                        });
+                      }
+                    }).catch((err) => {
+                      res.status(500).json({
+                        success: false,
+                        message: 'Server error',
+                        error: err
+                      });
+                    });
+                } else {
+                  res.status(403).json({
+                    success: false,
+                    message: 'You\'re not authorised to access this document'
+                  });
+                }
+              } else {
+                res.status(404).json({
+                  success: false,
+                  message: 'Role not found'
+                });
+              }
+            }).catch((err) => {
+              res.status(500).json({
+                success: false,
+                message: 'Server error',
+                error: err
+              });
+            });
+        }
+      } else {
+        res.status(404).json({
+          success: false,
+          message: 'Document doesn\'t exist'
+        });
+      }
+    }).catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: 'Server',
+        error: err
+      });
+    });
   },
   update: (req, res) => {
 
@@ -105,14 +185,14 @@ const documents = {
           res.status(403).json({
             success: false,
             message: 'You\'re not authorised to do this'
-          })
+          });
         }
       }
     }).catch(() => {
       res.status(500).json({
         success: false,
         message: 'Server error'
-      })
+      });
     });
 
 
