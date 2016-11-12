@@ -16,6 +16,8 @@ const documentRoutes = (router) => {
     .put(authentication, docCtr.update)
     .delete(authentication, docCtr.delete);
 
+  router
+    .get('/users/:uid/documents/');
 };
 
 module.exports = documentRoutes;
