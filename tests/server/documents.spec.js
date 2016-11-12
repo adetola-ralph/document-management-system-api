@@ -119,6 +119,18 @@ describe('Document', () => {
       });
   });
 
+  it('should return all relevant documents belonging to a user', (done) => {
+    api
+      .get('/api/user/3/documents/')
+      .send()
+      .expect(200)
+      .end((err, res) => {
+        expect(res.message).to.equal('Documents retrieved');
+        expect(res.data).to.equal();
+        done(err);
+      });
+  });
+
   xit('should return all relevant documents', (done) => {
     api
       .get('/api/documents/')
@@ -138,18 +150,6 @@ describe('Document', () => {
       .expect(200)
       .end((err, res) => {
         expect(res.message).to.equal('Document found');
-        expect(res.data).to.equal();
-        done(err);
-      });
-  });
-
-  xit('should return all relevant documents belonging to a user', (done) => {
-    api
-      .get('/api/user/3/documents/')
-      .send()
-      .expect(200)
-      .end((err, res) => {
-        expect(res.message).to.equal('Documents retrieved');
         expect(res.data).to.equal();
         done(err);
       });
