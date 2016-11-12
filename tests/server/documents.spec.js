@@ -82,6 +82,18 @@ describe('Document', () => {
       });
   });
 
+  it('All fields must be filled', (done) => {
+    api
+      .post('/api/documents/')
+      .set('x-access-token', normalToken1)
+      .send(documentData.invalidDocument)
+      .expect(400)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('All fields must be filled');
+        done(err);
+      });
+  });
+
   it('Registered users can create documents', (done) => {
     api
       .post('/api/documents/')

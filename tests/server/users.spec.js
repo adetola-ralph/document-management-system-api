@@ -32,6 +32,17 @@ before(() => {
 });
 
 describe('User', () => {
+  it('all fields must be filled', (done) => {
+    api
+      .post('/api/users/')
+      .send(userData.invalidUSer1)
+      .expect(400)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('All fields must be filled');
+        done(err);
+      });
+  });
+
   it('should create a new user', (done) => {
     api
       .post('/api/users/')

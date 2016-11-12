@@ -8,5 +8,9 @@ module.exports = {
     title: 'document y',
     content: 'document y contents',
     access: 'public'
+  },
+  invalidDocument: {
+    title: 'document y',
+    access: 'public'
   }
 };
