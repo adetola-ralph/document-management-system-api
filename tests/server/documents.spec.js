@@ -33,13 +33,13 @@ describe('Document', () => {
         password: userData.adminUser.password
       })
       .end(function(err, res){
-        console.log(err)
         adminToken = res.body.data;
         done(err);
       });
   });
 
   before((done) => {
+    //userid = 3
     request
       .post('http://localhost:8080/api/users/login/')
       .send({
@@ -53,6 +53,7 @@ describe('Document', () => {
   });
 
   before((done) => {
+    // userid = 2
     request
       .post('http://localhost:8080/api/users/login/')
       .send({
@@ -66,7 +67,6 @@ describe('Document', () => {
   });
 
   before((done) => {
-    console.log('running doc seed')
     docSeeder.startSeed();
     done();
   });
@@ -74,7 +74,7 @@ describe('Document', () => {
   it('Only registered users can create documents', (done) => {
     api
       .post('/api/documents/')
-      .send(documentData.document1)
+      .send(documentData.documenty)
       .expect(403)
       .end((err, res) => {
         expect(res.body.message).to.equal('Token not provided');
@@ -178,14 +178,35 @@ describe('Document', () => {
       });
   });
 
-  xit('should return all relevant documents', (done) => {
+  it('documents marked private should only be accessible to it\'s creator', (done) => {
     api
-      .get('/api/documents/')
-      .send()
+      .get('/api/documents/1')
+      .set('x-access-token', normalToken2)
+      .expect(403)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('You\'re not authorised to access this document');
+        done(err);
+      });
+  });
+
+  it('documents marked role should be accessible to users with the same as it\'s creator', (done) => {
+    api
+      .get('/api/documents/2')
+      .set('x-access-token', normalToken2)
       .expect(200)
       .end((err, res) => {
-        expect(res.message).to.equal();
-        expect(res.data).to.equal();
+        expect(res.body.message).to.equal('Document found');
+        done(err);
+      });
+  });
+
+  it('documents marked public should be accessible to all users', (done) => {
+    api
+      .get('/api/documents/8')
+      .set('x-access-token', normalToken1)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Document found');
         done(err);
       });
   });
