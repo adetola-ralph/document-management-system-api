@@ -17,7 +17,7 @@ const documentRoutes = (router) => {
     .delete(authentication, docCtr.delete);
 
   router
-    .get('/users/:uid/documents/');
+    .get('/users/:uid/documents/', authentication, docCtr.getUserDoc);
 };
 
 module.exports = documentRoutes;

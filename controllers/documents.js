@@ -59,6 +59,63 @@ const documents = {
   },
   delete: (req, res) => {
 
+  },
+  getUserDoc: (req, res) => {
+    const decoded = req.decoded;
+    const uid = req.params.uid;
+    const userRoleId = decoded.roleId;
+
+    models.Roles.findOne({
+      where: {
+        id: userRoleId
+      }
+    }).then((role) => {
+      if(!role) {
+        res.status(404).json({
+          success: false,
+          message: 'Role doesn\'t exists'
+        });
+      } else {
+        if (decoded.id === Number(uid) || role.title === 'admin') {
+          docModel.findAll({
+            where: {
+              ownerId: uid
+            }
+          }).then((documents) => {
+            if(documents.length > 0) {
+              res.status(200).json({
+                success: true,
+                message: 'Documents retrieved',
+                data: documents
+              });
+            } else {
+              res.status(200).json({
+                success: true,
+                message: 'User doesn\'t have any document',
+                data: []
+              });
+            }
+          }).catch(() => {
+            res.status(500).json({
+              success: false,
+              message: 'Server error'
+            });
+          });
+        } else {
+          res.status(403).json({
+            success: false,
+            message: 'You\'re not authorised to do this'
+          })
+        }
+      }
+    }).catch(() => {
+      res.status(500).json({
+        success: false,
+        message: 'Server error'
+      })
+    });
+
+
   }
 };
 
