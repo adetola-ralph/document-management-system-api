@@ -121,12 +121,47 @@ describe('Document', () => {
 
   it('should return all relevant documents belonging to a user', (done) => {
     api
-      .get('/api/user/3/documents/')
-      .send()
+      .get('/api/users/3/documents/')
+      .set('x-access-token', normalToken1)
       .expect(200)
       .end((err, res) => {
-        expect(res.message).to.equal('Documents retrieved');
-        expect(res.data).to.equal();
+        expect(res.body.message).to.equal('Documents retrieved');
+        expect(res.body.data.length).to.equal(7);
+        done(err);
+      });
+  });
+
+  it('admin should have access to all relevant documents belonging to a user', (done) => {
+    api
+      .get('/api/users/3/documents/')
+      .set('x-access-token', adminToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Documents retrieved');
+        expect(res.body.data.length).to.equal(7);
+        done(err);
+      });
+  });
+
+  it('Users with no document should return empty array', (done) => {
+    api
+      .get('/api/users/4/documents/')
+      .set('x-access-token', adminToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('User doesn\'t have any document');
+        expect(res.body.data).to.deep.equal([]);
+        done(err);
+      });
+  });
+
+  it('users\'s shouldn\'t have access to other user\'s documents', (done) => {
+    api
+      .get('/api/users/3/documents/')
+      .set('x-access-token', normalToken2)
+      .expect(403)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('You\'re not authorised to do this');
         done(err);
       });
   });
