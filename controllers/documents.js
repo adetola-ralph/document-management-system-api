@@ -7,7 +7,65 @@ const docHelper  = require('./helpers/docHelper.js');
 
 const documents = {
   index: (req, res) => {
+    const decodedUser = req.decoded;
+    const queries = req.query;
+    const dbQuery = docHelper.queryBuilder(queries);
 
+    models.Roles
+      .findById(decodedUser.roleId)
+      .then((role) => {
+        if (role) {
+          if (role.title !== 'admin') {
+            if(dbQuery['where']) {
+              dbQuery['where']['$or'] = [
+                {access: 'public'},
+                {ownerId: decodedUser.id}
+              ];
+            } else {
+              dbQuery.where = {
+                $or: [
+                  {access: 'public'},
+                  {ownerId: decodedUser.id},
+                ]
+              };
+            }
+          }
+
+          docModel.findAll(dbQuery)
+            .then((documents) => {
+              if (documents.length > 0) {
+                res.status(200).json({
+                  success: true,
+                  message: 'Documents retreived',
+                  data: documents
+                });
+              } else {
+                res.status(200).json({
+                  success: true,
+                  message: 'No documents available',
+                  data: []
+                });
+              }
+            }).catch((err) => {
+              res.status(500).json({
+                success: false,
+                message: 'Server error',
+                error: err
+              });
+            });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: 'Role not found'
+          });
+        }
+      }).catch((err) => {
+        res.status(500).json({
+          success: false,
+          message: 'Server error',
+          error: err
+        });
+      });
   },
   create: (req, res) => {
     const decodedUser = req.decoded;
@@ -131,7 +189,7 @@ const documents = {
     }).catch((err) => {
       res.status(500).json({
         success: false,
-        message: 'Server',
+        message: 'Server error',
         error: err
       });
     });
