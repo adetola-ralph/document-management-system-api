@@ -29,6 +29,8 @@ const documents = {
         });
       } else {
         document.ownerId = decodedUser.id;
+        document.ownerRoleId = decodedUser.roleId;
+
         docModel.create(document).then((newDoc) => {
           res.status(201).json({
             success: true,

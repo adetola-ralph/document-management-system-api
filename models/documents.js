@@ -14,6 +14,10 @@ module.exports = function(sequelize, DataTypes) {
     access: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    ownerRoleId: {
+      type:DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
     classMethods: {

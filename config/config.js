@@ -7,7 +7,8 @@ module.exports = {
     'database': 'document_db',
     'host': 'localhost',
     'port': '5432',
-    'dialect': 'postgres'
+    'dialect': 'postgres',
+    'logging': false
   },
   'test': {
     'username': process.env.TEST_DB_USER ||'postgres',
@@ -15,7 +16,8 @@ module.exports = {
     'database': 'document_db_test',
     'host': 'localhost',
     'port': '5432',
-    'dialect': 'postgres'
+    'dialect': 'postgres',
+    'logging': false
   },
   'production': {
     'username': 'update me',
