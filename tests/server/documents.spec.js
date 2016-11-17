@@ -211,6 +211,28 @@ describe('Document', () => {
       });
   });
 
+  it('admin should be able to get any document', (done) => {
+    api
+      .get('/api/documents/12')
+      .set('x-access-token', adminToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Document found');
+        done(err);
+      });
+  });
+
+  it('non-existent documents should return 404', (done) => {
+    api
+      .get('/api/documents/13')
+      .set('x-access-token', adminToken)
+      .expect(404)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Document doesn\'t exist');
+        done(err);
+      });
+  });
+
   it('admin should be able to get all the documents', (done) => {
     api
       .get('/api/documents')
@@ -236,13 +258,6 @@ describe('Document', () => {
   });
 
   it('Document gotten can be limited', (done) => {
-    const d = new Date();
-    const day = d.getDate();
-    const month = d.getMonth()+1;
-    const year = d.getFullYear();
-
-    const date = `${year}-${month}-${day}`;
-
     api
       .get('/api/documents?limit=5')
       .set('x-access-token', adminToken)
