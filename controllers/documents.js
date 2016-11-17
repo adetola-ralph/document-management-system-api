@@ -195,7 +195,64 @@ const documents = {
     });
   },
   update: (req, res) => {
+    const decodedUser = req.decoded;
+    const docEdit = req.body;
+    const docId = req.params.id;
 
+    models.Roles.findById(decodedUser.roleId)
+    .then((role) => {
+      if (role) {
+        docModel.findOne({
+          where: {
+            id: docId
+          }
+        }).then((document) => {
+          if (role.title === 'admin' || document.ownerId === decodedUser.id) {
+            docModel.update(docEdit, {
+              where: {
+                id: docId
+              },
+              returning: true,
+              plain: true
+            }).then((updatedDocument) => {
+              res.status(200).json({
+                success: true,
+                message: 'Document updated',
+                data: updatedDocument[1].dataValues
+              });
+            }).catch((err) => {
+              res.status(500).json({
+                success: false,
+                message: 'Server error',
+                error: err
+              });
+            });
+          } else {
+            res.status(403).json({
+              success: false,
+              message: 'You\'re not authorised to perform this action'
+            });
+          }
+        }).catch((err) => {
+          res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: err
+          });
+        });
+      } else {
+        res.status(404).json({
+          success: false,
+          message: 'Role not found'
+        });
+      }
+    }).catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: 'Server error',
+        error: err
+      });
+    });
   },
   delete: (req, res) => {
 
