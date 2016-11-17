@@ -323,11 +323,35 @@ describe('Document', () => {
       });
   });
 
-  xit('should delete an exisiting document', (done) => {
+  it('non-admin users should\'t be able to delete other users documents', (done) => {
     api
-      .delete('/api/documents/3')
+      .delete('/api/documents/11')
+      .set('x-access-token', normalToken2)
+      .expect(403)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('You\'re not authorised to perform this action');
+        done(err);
+      });
+  });
+
+  it('admin users should be able to delete any document', (done) => {
+    api
+      .delete('/api/documents/11')
+      .set('x-access-token', adminToken)
       .expect(200)
       .end((err, res) => {
+        expect(res.body.message).to.equal('Document deleted');
+        done(err);
+      });
+  });
+
+  it('users should be able to delete their document', (done) => {
+    api
+      .delete('/api/documents/12')
+      .set('x-access-token', normalToken2)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Document deleted');
         done(err);
       });
   });
