@@ -254,39 +254,71 @@ describe('Document', () => {
       });
   });
 
-  it('Document gotten can be limited', (done) => {
+  it('start point for getting all documents can be set', (done) => {
     api
-      .get('/api/documents?limit=5&offset=2')
+      .get('/api/documents?limit=6&offset=2')
       .set('x-access-token', adminToken)
       .expect(200)
       .end((err, res) => {
         expect(res.body.message).to.equal('Documents retreived');
-        expect(res.body.data.length).to.equal(5);
+        expect(res.body.data.length).to.equal(6);
         expect(res.body.data[0].id).to.equal(3);
         done(err);
       });
   });
 
-  xit('should find a document by its id', (done) => {
+  it('date can be set for documents search', (done) => {
     api
-      .get('/api/documents/1')
-      .send()
+      .get('/api/documents?limit=4&date=2016-11-17')
+      .set('x-access-token', adminToken)
       .expect(200)
       .end((err, res) => {
-        expect(res.message).to.equal('Document found');
-        expect(res.data).to.equal();
+        expect(res.body.message).to.equal('Documents retreived');
+        expect(res.body.data.length).to.be.at.most(4);
         done(err);
       });
   });
 
-  xit('should update document attribute', (done) => {
+  it('users should be able to update their document', (done) => {
     api
-      .put('/api/documents/1')
+      .put('/api/documents/5')
+      .set('x-access-token', normalToken2)
       .send({
-        title: ''
+        title: 'Document 5 document edit'
       })
-      .expect(204)
+      .expect(200)
       .end((err, res) => {
+        expect(res.body.message).to.equal('Document updated');
+        expect(res.body.data.title).to.equal('Document 5 document edit');
+        done(err);
+      });
+  });
+
+  it('non-admin users shouldn\'t be able to update other user\'s document', (done) => {
+    api
+      .put('/api/documents/10')
+      .set('x-access-token', normalToken2)
+      .send({
+        title: 'Document 10 document edit'
+      })
+      .expect(403)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('You\'re not authorised to perform this action');
+        done(err);
+      });
+  });
+
+  it('admin should be able to update any document', (done) => {
+    api
+      .put('/api/documents/10')
+      .set('x-access-token', adminToken)
+      .send({
+        title: 'Document 10 document edit'
+      })
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Document updated');
+        expect(res.body.data.title).to.equal('Document 10 document edit');
         done(err);
       });
   });
