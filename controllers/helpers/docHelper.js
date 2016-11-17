@@ -10,6 +10,32 @@ const docHelper = {
       res.end();
       return true;
     }
+  },
+  queryBuilder: (reqQuery) => {
+    const dbQuery = {
+      order: [['createdAt', 'DESC']]
+    };
+
+    const queries = Object.keys(reqQuery);
+
+    if (queries.indexOf('offset') > -1) {
+      dbQuery.offset = reqQuery.offset;
+    }
+    if (queries.indexOf('limit') > -1) {
+      dbQuery.limit = reqQuery.limit;
+    }
+    if (queries.indexOf('date') > -1) {
+      var nextDate = new Date(reqQuery.date);
+
+      dbQuery.where = {
+        createdAt: {
+          $lt: new Date(new Date(nextDate.setDate(nextDate.getDate() + 1))),
+          $gt: new Date(new Date(reqQuery.date)-1)
+        }
+      };
+    }
+
+    return dbQuery;
   }
 };
 
