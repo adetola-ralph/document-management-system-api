@@ -211,6 +211,62 @@ describe('Document', () => {
       });
   });
 
+  it('admin should be able to get all the documents', (done) => {
+    api
+      .get('/api/documents')
+      .set('x-access-token', adminToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Documents retreived');
+        expect(res.body.data.length).to.equal(12);
+        done(err);
+      });
+  });
+
+  it('normal users should be able to get some of the documents', (done) => {
+    api
+      .get('/api/documents')
+      .set('x-access-token', normalToken2)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Documents retreived');
+        expect(res.body.data.length).to.equal(9);
+        done(err);
+      });
+  });
+
+  it('Document gotten can be limited', (done) => {
+    const d = new Date();
+    const day = d.getDate();
+    const month = d.getMonth()+1;
+    const year = d.getFullYear();
+
+    const date = `${year}-${month}-${day}`;
+
+    api
+      .get('/api/documents?limit=5')
+      .set('x-access-token', adminToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Documents retreived');
+        expect(res.body.data.length).to.equal(5);
+        done(err);
+      });
+  });
+
+  it('Document gotten can be limited', (done) => {
+    api
+      .get('/api/documents?limit=5&offset=2')
+      .set('x-access-token', adminToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Documents retreived');
+        expect(res.body.data.length).to.equal(5);
+        expect(res.body.data[0].id).to.equal(3);
+        done(err);
+      });
+  });
+
   xit('should find a document by its id', (done) => {
     api
       .get('/api/documents/1')
