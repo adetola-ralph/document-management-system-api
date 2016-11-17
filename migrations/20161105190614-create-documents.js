@@ -20,6 +20,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      access: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      ownerRoleId: {
+        type:Sequelize.INTEGER,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

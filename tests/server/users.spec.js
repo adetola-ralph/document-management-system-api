@@ -32,6 +32,17 @@ before(() => {
 });
 
 describe('User', () => {
+  it('all fields must be filled', (done) => {
+    api
+      .post('/api/users/')
+      .send(userData.invalidUSer1)
+      .expect(400)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('All fields must be filled');
+        done(err);
+      });
+  });
+
   it('should create a new user', (done) => {
     api
       .post('/api/users/')
@@ -142,7 +153,7 @@ describe('User', () => {
 
   it('Admin users should be able to update their details', (done) => {
     api
-      .put('/api/users/2')
+      .put('/api/users/4')
       .set('x-access-token', adminToken)
       .send({
         firstname: 'firstname'

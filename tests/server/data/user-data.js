@@ -37,7 +37,6 @@ module.exports = {
   },
   // incomplete user details
   invalidUSer1: {
-    firstname: '',
     lastname: 'Gberikon',
     username: 'tgberikon',
     email: 'terwase@gmail.com',
