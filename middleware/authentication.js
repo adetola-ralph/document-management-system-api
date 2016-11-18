@@ -1,7 +1,7 @@
 'use strict';
 
 const jwt    = require('jsonwebtoken');
-const dotenv = require('dotenv').config();
+const dotenv = require('dotenv').config({ silent: true });
 
 const secret = process.env.SECRET;
 

@@ -3,7 +3,7 @@
 const models     = require('./../models/');
 const userModel  =models.Users;
 const jwt        = require('jsonwebtoken');
-const dotenv     = require('dotenv').config();
+const dotenv     = require('dotenv').config({ silent: true });
 const bcrypt     = require('bcryptjs');
 
 const authHelper = require('./helpers/authHelper.js');

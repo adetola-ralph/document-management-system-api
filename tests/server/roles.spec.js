@@ -5,7 +5,7 @@ const supertest = require('supertest');
 const server    = require('./../../index');
 const api       = supertest(server);
 const jwt       = require('jsonwebtoken');
-const dotenv    = require('dotenv').config();
+const dotenv    = require('dotenv').config({ silent: true });
 
 const secret    = process.env.SECRET;
 

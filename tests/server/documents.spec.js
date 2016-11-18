@@ -1,15 +1,14 @@
-'use strict';
+const expect = require('chai').expect;
+const supertest = require('supertest');
+const server = require('./../../index');
+const request = require('superagent');
 
-const expect        = require('chai').expect;
-const supertest     = require('supertest');
-const server        = require('./../../index');
-const api           = supertest(server);
-const request       = require('superagent');
+const api = supertest(server);
 
-const documentData  = require('./data/document-data.js');
-const userData      = require('./data/user-data.js');
 
-const docSeeder     = require('./../../seeders/docSeeder');
+const documentData = require('./data/document-data.js');
+const userData = require('./data/user-data.js');
+const docSeeder = require('./../../seeders/docSeeder');
 
 let adminToken, normalToken1, normalToken2;
 
@@ -21,7 +20,7 @@ describe('Document', () => {
         username: userData.adminUser.username,
         password: userData.adminUser.password
       })
-      .end(function(err, res){
+      .end((err, res) => {
         adminToken = res.body.data;
         done(err);
       });
@@ -35,7 +34,7 @@ describe('Document', () => {
         username: userData.normalUser1.username,
         password: userData.normalUser1.password
       })
-      .end(function(err, res){
+      .end((err, res) => {
         normalToken1 = res.body.data;
         done(err);
       });
@@ -49,7 +48,7 @@ describe('Document', () => {
         username: userData.normalUser3.username,
         password: userData.normalUser3.password
       })
-      .end(function(err, res){
+      .end((err, res) => {
         normalToken2 = res.body.data;
         done(err);
       });
@@ -274,7 +273,7 @@ describe('Document', () => {
   it('date can be set for documents search', (done) => {
     const d = new Date();
     const day = d.getDate();
-    const month = d.getMonth()+1;
+    const month = d.getMonth() + 1;
     const year = d.getFullYear();
     const date = `${year}-${month}-${day}`;
     api
@@ -364,5 +363,4 @@ describe('Document', () => {
         done(err);
       });
   });
-
 });
