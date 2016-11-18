@@ -1,14 +1,3 @@
-// Write a test that validates that a new user document created has a published date defined.
-// Write a test that validates that all documents are returned, limited by a specified number, when Documents.all is called with a query parameter limit.
-// Write a test that also employs the limit above with an offset as well (pagination). So documents could be fetched in chunks e.g 1st 10 document, next 10 documents (skipping the 1st 10) and so on.
-// Write a test that validates that all documents are returned in order of their published dates, starting from the most recent when Documents.all is called.
-// POST /documents/ Creates a new document instance.
-// GET /documents/ Find matching instances of document.
-// GET /documents/<id> Find document.
-// PUT /documents/<id> Update document attributes.
-// DELETE /documents/<id> Delete document.
-// GET /users/<id>/ documents Find all documents belonging to the user .
-
 'use strict';
 
 const expect        = require('chai').expect;
@@ -39,7 +28,7 @@ describe('Document', () => {
   });
 
   before((done) => {
-    //userid = 3
+    // userid = 3
     request
       .post('http://localhost:8080/api/users/login/')
       .send({
@@ -283,8 +272,13 @@ describe('Document', () => {
   });
 
   it('date can be set for documents search', (done) => {
+    const d = new Date();
+    const day = d.getDate();
+    const month = d.getMonth()+1;
+    const year = d.getFullYear();
+    const date = `${year}-${month}-${day}`;
     api
-      .get('/api/documents?limit=4&date=2016-11-17')
+      .get(`/api/documents?limit=4&date=${date}`)
       .set('x-access-token', adminToken)
       .expect(200)
       .end((err, res) => {

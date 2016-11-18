@@ -1,6 +1,3 @@
-// Write a test that validates that a new role created has a unique title.
-// Write a test that validates that all roles are returned when Roles.all is called.
-
 'use strict';
 
 const expect    = require('chai').expect;
@@ -56,6 +53,18 @@ describe('Roles', () => {
       });
   });
 
+  it('role title cannot be empty', (done) => {
+    api
+      .post('/api/roles/')
+      .set('x-access-token', adminToken)
+      .send(roleData.invalidRole)
+      .expect(403)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Title cannot be empty');
+        done(err);
+      });
+  });
+
   it('should not allow duplicate roles', (done) => {
     api
       .post('/api/roles/')
@@ -91,6 +100,17 @@ describe('Roles', () => {
       });
   });
 
+  it('should return 404 if the role requested doesn\'t exist', (done) => {
+    api
+      .get('/api/roles/4')
+      .set('x-access-token', adminToken)
+      .expect(404)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('role does not exist');
+        done(err);
+      });
+  });
+
   it('can update a role\'s title', (done) => {
     api
       .put('/api/roles/2')
@@ -99,6 +119,18 @@ describe('Roles', () => {
       .expect(200)
       .end((err, res) => {
         expect(res.body.message).to.equal('updated successfully');
+        done(err);
+      });
+  });
+
+  it('should return 404 if the role to be updated doesn\'t exist', (done) => {
+    api
+      .put('/api/roles/4')
+      .set('x-access-token', adminToken)
+      .send({title: 'regular'})
+      .expect(404)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('role does not exist');
         done(err);
       });
   });

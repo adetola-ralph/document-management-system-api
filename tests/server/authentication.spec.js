@@ -67,8 +67,4 @@ describe('User authentication', () => {
         done(err);
       });
   });
-
-  xit('should allow registered users to signout', () => {
-
-  });
 });

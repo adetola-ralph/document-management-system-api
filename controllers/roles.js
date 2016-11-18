@@ -56,38 +56,37 @@ const roles = {
         success: false,
         message: 'Title cannot be empty'
       });
-      res.end();
-    }
-    models
-      .Roles.findOne({
-        where: {
-          title: roleTitle
-        }
-      }).then((role) => {
-        if (!role) {
-          models
-          .Roles.create({title: roleTitle})
-          .then((newRole) => {
-            res.status(201).json({
-              success: true,
-              message: `${roleTitle} role created successfully`,
-              data: newRole
+    } else {
+      models
+        .Roles.findOne({
+          where: {
+            title: roleTitle
+          }
+        }).then((role) => {
+          if (!role) {
+            models
+            .Roles.create({title: roleTitle})
+            .then((newRole) => {
+              res.status(201).json({
+                success: true,
+                message: `${roleTitle} role created successfully`,
+                data: newRole
+              });
+            })
+            .catch(() => {
+              res.status(500).json({
+                success: false,
+                message: 'An error occured in the server'
+              });
             });
-          })
-          .catch(() => {
-            res.status(500).json({
+          } else {
+            res.status(409).json({
               success: false,
-              message: 'An error occured in the server'
+              message: `${roleTitle} role exists`,
             });
-          });
-        } else {
-          res.status(409).json({
-            success: false,
-            message: `${roleTitle} role exists`,
-          });
-        }
-      });
-
+          }
+        });
+    }
   },
   update: (req, res) => {
     const updatedTitle = req.body.title;
