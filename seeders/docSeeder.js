@@ -1,5 +1,5 @@
-'use strict';
 const models = require('./../models/index');
+
 const doc = models.Documents;
 
 const docData = [
@@ -75,7 +75,7 @@ const docData = [
   }
 ];
 
-const docSeeder  = {
+const docSeeder = {
   startSeed: () => {
     doc.bulkCreate(docData).then(() => {
       console.log('Document table seeded');

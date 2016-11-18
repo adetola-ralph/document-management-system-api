@@ -1,8 +1,5 @@
-'use strict';
-
-const docCtr        = require('./../controllers/documents.js');
+const docCtr = require('./../controllers/documents.js');
 const authentication = require('./../middleware/authentication');
-const authorisation  = require('./../middleware/authorisation');
 
 const documentRoutes = (router) => {
   router

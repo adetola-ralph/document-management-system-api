@@ -3,7 +3,7 @@
 const models     = require('./../models/');
 const userModel  = models.Users;
 const jwt        = require('jsonwebtoken');
-const dotenv     = require('dotenv').config();
+const dotenv     = require('dotenv').config({ silent: true });
 const userHelper = require('./helpers/userHelpers.js');
 
 const secret     = process.env.SECRET;

@@ -2,7 +2,7 @@
 
 const models     = require('./../models/');
 const docModel   = models.Documents;
-const dotenv     = require('dotenv').config();
+const dotenv     = require('dotenv').config({ silent: true });
 const docHelper  = require('./helpers/docHelper.js');
 
 const documents = {

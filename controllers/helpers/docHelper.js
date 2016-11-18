@@ -1,6 +1,6 @@
 const docHelper = {
   checkDocDetails: (req, res) => {
-    let document = req.body;
+    const document = req.body;
     if (!(document.title && document.content && document.access)) {
       res.status(400)
         .json({
@@ -25,12 +25,12 @@ const docHelper = {
       dbQuery.limit = reqQuery.limit;
     }
     if (queries.indexOf('date') > -1) {
-      var nextDate = new Date(reqQuery.date);
+      const nextDate = new Date(reqQuery.date);
 
       dbQuery.where = {
         createdAt: {
           $lt: new Date(new Date(nextDate.setDate(nextDate.getDate() + 1))),
-          $gt: new Date(new Date(reqQuery.date)-1)
+          $gt: new Date(new Date(reqQuery.date) - 1)
         }
       };
     }

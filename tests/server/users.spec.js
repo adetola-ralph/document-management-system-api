@@ -1,20 +1,19 @@
-'use strict';
-
-const expect    = require('chai').expect;
+const expect = require('chai').expect;
 const supertest = require('supertest');
-const server    = require('./../../index');
-const api       = supertest(server);
-const jwt       = require('jsonwebtoken');
-const dotenv    = require('dotenv').config();
+const server = require('./../../index');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config({ silent: true });
+const userData = require('./data/user-data.js');
 
-const secret    = process.env.SECRET;
+const api = supertest(server);
+const secret = process.env.SECRET;
 
-const userData  = require('./data/user-data.js');
+
 let adminToken;
 let normalToken;
 
 before(() => {
-  adminToken = jwt.sign({username: 'gberikon', roleId: 1}, secret, {
+  adminToken = jwt.sign({ username: 'gberikon', roleId: 1 }, secret, {
     expiresIn: '24h'
   });
   const normalUser = userData.normalUser3;
@@ -61,7 +60,6 @@ describe('User', () => {
   });
 
   it('should not accept duplicate username', (done) => {
-    //duplicate username test
     api
       .post('/api/users/')
       .send(userData.duplicateUser1)
@@ -115,7 +113,6 @@ describe('User', () => {
     .set('x-access-token', adminToken)
     .expect(200)
     .end((err, res) => {
-      expect(res.body.data).to.be.defined;
       expect(res.body.data.id).to.equal(2);
       done(err);
     });
@@ -127,7 +124,6 @@ describe('User', () => {
     .set('x-access-token', normalToken)
     .expect(200)
     .end((err, res) => {
-      expect(res.body.data).to.be.defined;
       expect(res.body.data.id).to.equal(2);
       done(err);
     });
