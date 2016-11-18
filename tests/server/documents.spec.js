@@ -283,8 +283,13 @@ describe('Document', () => {
   });
 
   it('date can be set for documents search', (done) => {
+    const d = new Date();
+    const day = d.getDate();
+    const month = d.getMonth()+1;
+    const year = d.getFullYear();
+    const date = `${year}-${month}-${day}`;
     api
-      .get('/api/documents?limit=4&date=2016-11-17')
+      .get(`/api/documents?limit=4&date=${date}`)
       .set('x-access-token', adminToken)
       .expect(200)
       .end((err, res) => {
