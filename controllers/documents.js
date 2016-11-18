@@ -1,11 +1,10 @@
-'use strict';
+const models = require('./../models/');
+const dotenv = require('dotenv').config({ silent: true });
+const docHelper = require('./helpers/docHelper.js');
 
-const models     = require('./../models/');
-const docModel   = models.Documents;
-const dotenv     = require('dotenv').config({ silent: true });
-const docHelper  = require('./helpers/docHelper.js');
+const docModel = models.Documents;
 
-const documents = {
+const documentsCtr = {
   index: (req, res) => {
     const decodedUser = req.decoded;
     const queries = req.query;
@@ -16,16 +15,16 @@ const documents = {
       .then((role) => {
         if (role) {
           if (role.title !== 'admin') {
-            if(dbQuery['where']) {
+            if (dbQuery['where']) {
               dbQuery['where']['$or'] = [
-                {access: 'public'},
-                {ownerId: decodedUser.id}
+                { access: 'public' },
+                { ownerId: decodedUser.id }
               ];
             } else {
               dbQuery.where = {
                 $or: [
-                  {access: 'public'},
-                  {ownerId: decodedUser.id},
+                  { access: 'public' },
+                  { ownerId: decodedUser.id },
                 ]
               };
             }
@@ -71,46 +70,48 @@ const documents = {
     const decodedUser = req.decoded;
     const document = req.body;
 
-    if (docHelper.checkDocDetails(req, res)) {
-      return;
-    }
-
-    docModel.findOne({
-      where: {
-        title: document.title
-      }
-    }).then((doc) => {
-      if (doc) {
-        res.status(409).json({
+    if (!docHelper.checkDocDetails(req, res)) {
+      res.status(400)
+        .json({
           success: false,
-          message: 'A document wih the title exists'
+          message: 'All fields must be filled'
         });
-      } else {
-        document.ownerId = decodedUser.id;
-        document.ownerRoleId = decodedUser.roleId;
-
-        docModel.create(document).then((newDoc) => {
-          res.status(201).json({
-            success: true,
-            message: 'Document created',
-            data: newDoc
-          });
-        }).catch(() => {
-          res.status(500).json({
+    } else {
+      docModel.findOne({
+        where: {
+          title: document.title
+        }
+      }).then((doc) => {
+        if (doc) {
+          res.status(409).json({
             success: false,
-            message: 'Server error'
+            message: 'A document wih the title exists'
           });
+        } else {
+          document.ownerId = decodedUser.id;
+          document.ownerRoleId = decodedUser.roleId;
+
+          docModel.create(document).then((newDoc) => {
+            res.status(201).json({
+              success: true,
+              message: 'Document created',
+              data: newDoc
+            });
+          }).catch(() => {
+            res.status(500).json({
+              success: false,
+              message: 'Server error'
+            });
+          });
+        }
+      }).catch(() => {
+        res.status(500).json({
+          success: false,
+          message: 'Server error'
         });
-      }
-    }).catch(() => {
-      res.status(500).json({
-        success: false,
-        message: 'Server error'
       });
-    });
-
+    }
   },
-
   show: (req, res) => {
     const decodedUser = req.decoded;
     const docId = req.params.id;
@@ -121,14 +122,13 @@ const documents = {
       }
     }).then((document) => {
       if (document) {
-        if (document.ownerId === decodedUser.id  || document.access === 'public') {
+        if (document.ownerId === decodedUser.id || document.access === 'public') {
           res.status(200).json({
             success: true,
             message: 'Document found',
             data: document
           });
-        }
-        else {
+        } else {
           models.Roles.findById(decodedUser.roleId)
             .then((role) => {
               if (role) {
@@ -138,10 +138,10 @@ const documents = {
                     message: 'Document found',
                     data: document
                   });
-                } else if(document.access === 'role') {
+                } else if (document.access === 'role') {
                   models.Users.findById(document.ownerId)
                     .then((user) => {
-                      if(user.roleId === decodedUser.roleId) {
+                      if (user.roleId === decodedUser.roleId) {
                         res.status(200).json({
                           success: true,
                           message: 'Document found',
@@ -327,7 +327,7 @@ const documents = {
         id: userRoleId
       }
     }).then((role) => {
-      if(!role) {
+      if (!role) {
         res.status(404).json({
           success: false,
           message: 'Role doesn\'t exists'
@@ -339,7 +339,7 @@ const documents = {
               ownerId: uid
             }
           }).then((documents) => {
-            if(documents.length > 0) {
+            if (documents.length > 0) {
               res.status(200).json({
                 success: true,
                 message: 'Documents retrieved',
@@ -371,9 +371,7 @@ const documents = {
         message: 'Server error'
       });
     });
-
-
   }
 };
 
-module.exports = documents;
+module.exports = documentsCtr;

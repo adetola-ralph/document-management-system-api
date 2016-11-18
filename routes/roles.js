@@ -1,8 +1,6 @@
-'use strict';
-
 const roleCtr = require('./../controllers/roles.js');
 const authentication = require('./../middleware/authentication');
-const authorisation  = require('./../middleware/authorisation');
+const authorisation = require('./../middleware/authorisation');
 
 const roleRouter = (router) => {
   router

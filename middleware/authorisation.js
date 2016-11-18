@@ -1,6 +1,6 @@
-'use strict';
-const models     = require('./../models/index.js');
-const roleModel  = models.Roles;
+const models = require('./../models/index.js');
+
+const roleModel = models.Roles;
 
 const authorize = (req, res, next) => {
   const decoded = req.decoded;

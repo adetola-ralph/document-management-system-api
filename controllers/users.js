@@ -1,14 +1,13 @@
-'use strict';
-
-const models     = require('./../models/');
-const userModel  = models.Users;
-const jwt        = require('jsonwebtoken');
-const dotenv     = require('dotenv').config({ silent: true });
+const models = require('./../models/');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config({ silent: true });
 const userHelper = require('./helpers/userHelpers.js');
 
-const secret     = process.env.SECRET;
+const secret = process.env.SECRET;
+const userModel = models.Users;
 
-const users = {
+
+const usersCtr = {
   index: (req, res) => {
     userModel.findAll()
       .then((users) => {
@@ -29,60 +28,62 @@ const users = {
   },
   // called for signup
   create: (req, res) => {
-    let user = req.body;
-    if (userHelper.checkDetails(req, res)) {
-      return;
-    }
+    const user = req.body;
+    if (!userHelper.checkDetails(req)) {
+      res.status(400)
+        .json({
+          success: false,
+          message: 'All fields must be filled'
+        });
+    } else {
+      if (user.roleId === 1) {
+        const token = req.headers['x-access-token'];
+        const decoded = jwt.verify(token, secret);
 
-    if (user.roleId === 1) {
-      const token = req.headers['x-access-token'];
-      const decoded = jwt.verify(token, secret);
-
-      if (decoded && decoded.roleId !== 1) {
-        res.status(403)
-          .json({
-            success: 'false',
-            message: 'You must be an admin user to create another admin user'
+        if (decoded && decoded.roleId !== 1) {
+          res.status(403)
+            .json({
+              success: 'false',
+              message: 'You must be an admin user to create another admin user'
+            });
+          res.end();
+        }
+      } else {
+        userModel
+          .findOne({
+            where: {
+              $or: [{ username: user.username }, { email: user.email }]
+            }
+          }).then((result) => {
+            if (!result) {
+              userModel
+                .create(user)
+                .then((newUser) => {
+                  res.status(201).json({
+                    success: true,
+                    message: 'User created',
+                    data: newUser
+                  });
+                });
+            } else {
+              res.status(409).json({
+                success: false,
+                message: 'User already exists'
+              });
+            }
+          }).catch(() => {
+            res.status(500).json({
+              success: false,
+              message: 'Server error'
+            });
           });
-        res.end();
-        return;
       }
     }
-
-    userModel
-      .findOne({
-        where: {
-          $or: [{username: user.username}, {email: user.email}]
-        }
-      }).then((result) => {
-        if (!result) {
-          userModel
-            .create(user)
-            .then((newUser) => {
-              res.status(201).json({
-                success: true,
-                message: 'User created',
-                data: newUser
-              });
-            });
-        } else {
-          res.status(409).json({
-            success: false,
-            message: 'User already exists'
-          });
-        }
-      }).catch(() => {
-        res.status(500).json({
-          success: false,
-          message: 'Server error'
-        });
-      });
   },
 
   show: (req, res) => {
     const userId = req.params.id;
     const decoded = req.decoded;
-
 
     models.Roles.findOne({
       where: {
@@ -90,10 +91,10 @@ const users = {
       }
     }).then((role) => {
       if (role) {
-        if(decoded.id === Number(userId) || role.title === 'admin') {
+        if (decoded.id === Number(userId) || role.title === 'admin') {
           userModel
             .findOne({
-              where:{
+              where: {
                 id: userId
               }
             }).then((user) => {
@@ -134,7 +135,7 @@ const users = {
       }
     }).then((role) => {
       if (role) {
-        if(decoded.id === Number(userId) || role.title === 'admin') {
+        if (decoded.id === Number(userId) || role.title === 'admin') {
           userModel.update(req.body, {
             where: {
               id: userId
@@ -208,4 +209,4 @@ const users = {
   }
 };
 
-module.exports = users;
+module.exports = usersCtr;

@@ -1,9 +1,7 @@
-'use strict';
-
-const userCtr        = require('./../controllers/users.js');
-const userAuth       = require('./../controllers/authentication.js');
+const userCtr = require('./../controllers/users.js');
+const userAuth = require('./../controllers/authentication.js');
 const authentication = require('./../middleware/authentication');
-const authorisation  = require('./../middleware/authorisation');
+const authorisation = require('./../middleware/authorisation');
 
 const userRoutes = (router) => {
   router

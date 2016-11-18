@@ -1,15 +1,10 @@
 const docHelper = {
-  checkDocDetails: (req, res) => {
+  checkDocDetails: (req) => {
     const document = req.body;
     if (!(document.title && document.content && document.access)) {
-      res.status(400)
-        .json({
-          success: false,
-          message: 'All fields must be filled'
-        });
-      res.end();
-      return true;
+      return false;
     }
+    return true;
   },
   queryBuilder: (reqQuery) => {
     const dbQuery = {
