@@ -15,23 +15,16 @@ const documentsCtr = {
     models.Roles
       .findById(decodedUser.roleId)
       .then((role) => {
+
         if (role.title !== 'admin') {
-          if (dbQuery['where']) {
-            dbQuery['where']['$or'] = [{
-              access: 'public'
-            }, {
-              ownerId: decodedUser.id
-            }];
-          } else {
-            dbQuery.where = {
-              $or: [{
-                access: 'public'
-              }, {
-                ownerId: decodedUser.id
-              }, ]
-            };
-          }
+          dbQuery.where = dbQuery.where || {};
+          dbQuery.where.$or = [{
+            access: 'public'
+          }, {
+            ownerId: decodedUser.id
+          }];
         }
+
 
         docModel.findAll(dbQuery)
           .then((documents) => {
