@@ -10,6 +10,7 @@
     "pretest": "NODE_ENV=test npm run-script migration",
     "test": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha --report lcovonly tests/server/tests.spec.js",
     "start": "nodemon index.js",
+    "seed": "node seed.js && node docSeeder.js",
     "coverage": "rm -rf coverage/",
     "coveralls": "cat coverage/lcov.info | coveralls"
   },
