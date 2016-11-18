@@ -1,10 +1,3 @@
-// Write a test that validates that a new user created has a role defined. **
-// Write a test that validates that all users are returned.
-// GET /users/ Find matching instances of user.
-// GET /users/<id> Find user.
-// PUT /users/<id> Update user attributes.
-// DELETE /users/<id> Delete user.
-
 'use strict';
 
 const expect    = require('chai').expect;
