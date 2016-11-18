@@ -101,7 +101,7 @@ describe('Document', () => {
       .send(documentData.documentx)
       .expect(409)
       .end((err, res) => {
-        expect(res.body.message).to.equal('A document wih the title exists');
+        expect(res.body.message).to.equal('A document with the title exists');
         done(err);
       });
   });

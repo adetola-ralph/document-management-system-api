@@ -85,7 +85,7 @@ const documentsCtr = {
         if (doc) {
           res.status(409).json({
             success: false,
-            message: 'A document wih the title exists'
+            message: 'A document with the title exists'
           });
         } else {
           document.ownerId = decodedUser.id;
