@@ -1,6 +1,4 @@
-'use strict';
-
-const jwt    = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config({ silent: true });
 
 const secret = process.env.SECRET;
@@ -10,10 +8,9 @@ const auth = (req, res, next) => {
   const token = req.body.token || req.headers['x-access-token'];
 
   if (token) {
-    // TODO: reimplement secret for the application
     jwt.verify(token, secret, (err, decoded) => {
       if (err) {
-        return res.status(403).json({
+        res.status(403).json({
           success: false,
           message: 'Invalid token'
         });

@@ -1,11 +1,9 @@
-'use strict';
+const expect = require('chai').expect;
+const supertest = require('supertest');
+const server = require('./../../index');
 
-const expect        = require('chai').expect;
-const supertest     = require('supertest');
-const server        = require('./../../index');
-const api           = supertest(server);
-
-const userData      = require('./data/user-data.js');
+const api = supertest(server);
+const userData = require('./data/user-data.js');
 
 describe('User authentication', () => {
   it('should expect all fields to be filled', (done) => {

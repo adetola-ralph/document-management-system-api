@@ -1,5 +1,5 @@
-'use strict';
 const models = require('./../models/index');
+
 const user = models.Users;
 const role = models.Roles;
 
@@ -10,16 +10,21 @@ const roleData = [
 ];
 
 const userData = [
-  { firstname: 'Adunoluwa', lastname: 'Olutola', username: 'adun_luwa',
-    email: 'adunoluwa1@oreofe.me', password: 'Adunoluwa95#', roleId: 1
+  {
+    firstname: 'Adunoluwa',
+    lastname: 'Olutola',
+    username: 'adun_luwa',
+    email: 'adunoluwa1@oreofe.me',
+    password: 'Adunoluwa95#',
+    roleId: 1
   }
 ];
 
-role.bulkCreate(roleData).then((role) => {
-  user.bulkCreate(userData).then((user)=> {
-  }).catch((err, res) => {
+role.bulkCreate(roleData).then(() => {
+  user.bulkCreate(userData).then(() => {
+  }).catch((err) => {
     console.err(err);
   });
-}).catch((err, res) => {
+}).catch((err) => {
   console.err(err);
 });

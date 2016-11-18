@@ -1,13 +1,11 @@
-'use strict';
-
-const models     = require('./../models/');
-const userModel  =models.Users;
-const jwt        = require('jsonwebtoken');
-const dotenv     = require('dotenv').config({ silent: true });
-const bcrypt     = require('bcryptjs');
-
+const models = require('./../models/');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config({ silent: true });
+const bcrypt = require('bcryptjs');
 const authHelper = require('./helpers/authHelper.js');
-const secret     = process.env.SECRET;
+
+const secret = process.env.SECRET;
+const userModel = models.Users;
 
 const authenticate = {
   signin: (req, res) => {
@@ -20,7 +18,7 @@ const authenticate = {
 
     userModel.findOne({
       where: {
-        'username': username
+        username
       }
     }).then((user) => {
       if (user) {

@@ -1,6 +1,5 @@
-'use strict';
-module.exports = function(sequelize, DataTypes) {
-  var Documents = sequelize.define('Documents', {
+module.exports = function (sequelize, DataTypes) {
+  const Documents = sequelize.define('Documents', {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -16,13 +15,13 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     ownerRoleId: {
-      type:DataTypes.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false
     }
   }, {
     classMethods: {
       associate: function(models) {
-        Documents.belongsTo(models.Users,{
+        Documents.belongsTo(models.Users, {
           as: 'owner',
           foreignKey: {
             allowNull: false

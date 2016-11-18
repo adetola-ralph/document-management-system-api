@@ -1,8 +1,6 @@
-'use strict';
-
 const models = require('./../models/');
 
-const roles = {
+const rolesCtr = {
   index: (req, res) => {
     models
       .Roles
@@ -35,7 +33,7 @@ const roles = {
             success: false,
             message: 'role does not exist'
           });
-        }else{
+        } else {
           res.status(200).json({
             success: true,
             message: 'role retreived',
@@ -65,7 +63,7 @@ const roles = {
         }).then((role) => {
           if (!role) {
             models
-            .Roles.create({title: roleTitle})
+            .Roles.create({ title: roleTitle })
             .then((newRole) => {
               res.status(201).json({
                 success: true,
@@ -103,15 +101,15 @@ const roles = {
             success: false,
             message: 'role does not exist'
           });
-        }else{
+        } else {
           models
             .Roles
-            .update({title: updatedTitle},{
+            .update({ title: updatedTitle }, {
               where: {
                 id: roleId
               }
             })
-            .then((updatedRole) => {
+            .then(() => {
               res.status(200).json({
                 success: true,
                 message: 'updated successfully'
@@ -133,6 +131,6 @@ const roles = {
   delete: (req, res) => {
 
   }
-}
+};
 
-module.exports = roles;
+module.exports = rolesCtr;

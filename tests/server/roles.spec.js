@@ -1,42 +1,39 @@
-'use strict';
-
-const expect    = require('chai').expect;
+const expect = require('chai').expect;
 const supertest = require('supertest');
-const server    = require('./../../index');
-const api       = supertest(server);
-const jwt       = require('jsonwebtoken');
-const dotenv    = require('dotenv').config({ silent: true });
-
-const secret    = process.env.SECRET;
-
-const roleData  = require('./data/role-data');
-const userData  = require('./data/user-data');
+const server = require('./../../index');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config({ silent: true });
+const roleData = require('./data/role-data');
+const userData = require('./data/user-data');
 const models = require('./../../models/index');
+
+const api = supertest(server);
+const secret = process.env.SECRET;
 const userModel = models.Users;
 const roleModel = models.Roles;
 let adminToken;
 let normalToken;
 
 before((done) => {
-  roleModel.create({title: 'admin'}).then((role) => {});
-    userModel.create(userData.adminUser).then((user) => {
-      console.log(`${user.username} created`);
-      adminToken = jwt.sign(user.dataValues, secret, {
-        expiresIn: '24h'
-      });
-      done();
+  roleModel.create({ title: 'admin' }).then(() => {});
+  userModel.create(userData.adminUser).then((user) => {
+    console.log(`${user.username} created`);
+    adminToken = jwt.sign(user.dataValues, secret, {
+      expiresIn: '24h'
     });
+    done();
+  });
 });
 
 before((done) => {
-  roleModel.create({title: 'normal'}).then((role) => {});
-    userModel.create(userData.normalUser3).then((user) => {
-      console.log(`${user.username} created`);
-      normalToken = jwt.sign(user.dataValues, secret, {
-        expiresIn: '24h'
-      });
-      done();
+  roleModel.create({ title: 'normal' }).then(() => {});
+  userModel.create(userData.normalUser3).then((user) => {
+    console.log(`${user.username} created`);
+    normalToken = jwt.sign(user.dataValues, secret, {
+      expiresIn: '24h'
     });
+    done();
+  });
 });
 
 describe('Roles', () => {
@@ -115,7 +112,7 @@ describe('Roles', () => {
     api
       .put('/api/roles/2')
       .set('x-access-token', adminToken)
-      .send({title: 'regular'})
+      .send({ title: 'regular' })
       .expect(200)
       .end((err, res) => {
         expect(res.body.message).to.equal('updated successfully');
@@ -127,7 +124,7 @@ describe('Roles', () => {
     api
       .put('/api/roles/4')
       .set('x-access-token', adminToken)
-      .send({title: 'regular'})
+      .send({ title: 'regular' })
       .expect(404)
       .end((err, res) => {
         expect(res.body.message).to.equal('role does not exist');
@@ -174,7 +171,7 @@ describe('Roles', () => {
       api
         .put('/api/roles/2')
         .set('x-access-token', normalToken)
-        .send({title: 'regular'})
+        .send({ title: 'regular' })
         .expect(403)
         .end((err, res) => {
           expect(res.body.message).to.equal('Not authorised to perform this action');
