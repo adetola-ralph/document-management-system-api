@@ -39,54 +39,61 @@ const usersCtr = {
     } else {
       models.Roles.findById(user.roleId).then((role) => {
         if (!role) {
-          res.status(400)
+          return res.status(400)
             .json({
               success: false,
               message: 'Please select a valid role'
             });
         } else if (role.title === 'admin') {
           const token = req.headers['x-access-token'];
-          const decoded = jwt.verify(token, secret);
-
-          if (decoded && decoded.roleId !== user.roleId) {
-            res.status(403)
+          if (token) {
+            const decoded = jwt.verify(token, secret);
+            if (decoded && decoded.roleId !== user.roleId) {
+              return res.status(403)
+                .json({
+                  success: false,
+                  message: 'You must be an admin user to create another admin user'
+                });
+            }
+          } else {
+            return res.status(403)
               .json({
                 success: false,
-                message: 'You must be an admin user to create another admin user'
+                message: 'You must be authenticated to create an admin user'
               });
-            res.end();
           }
-        } else {
-          userModel
-            .findOne({
-              where: {
-                $or: [{ username: user.username }, { email: user.email }]
-              }
-            }).then((result) => {
-              if (!result) {
-                userModel
-                  .create(user)
-                  .then((newUser) => {
-                    res.status(201).json({
-                      success: true,
-                      message: 'User created',
-                      data: newUser
-                    });
-                  });
-              } else {
-                res.status(409).json({
-                  success: false,
-                  message: 'User already exists'
-                });
-              }
-            }).catch((err) => {
-              res.status(500).json({
-                success: false,
-                message: 'Server error',
-                error: err
-              });
-            });
         }
+        // else {
+        userModel
+          .findOne({
+            where: {
+              $or: [{ username: user.username }, { email: user.email }]
+            }
+          }).then((result) => {
+            if (!result) {
+              userModel
+                .create(user)
+                .then((newUser) => {
+                  res.status(201).json({
+                    success: true,
+                    message: 'User created',
+                    data: newUser
+                  });
+                });
+            } else {
+              res.status(409).json({
+                success: false,
+                message: 'User already exists'
+              });
+            }
+          }).catch((err) => {
+            res.status(500).json({
+              success: false,
+              message: 'Server error',
+              error: err
+            });
+          });
+        // }
       });
     }
   },
