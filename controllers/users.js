@@ -37,49 +37,57 @@ const usersCtr = {
           message: 'All fields must be filled'
         });
     } else {
-      if (user.roleId === 1) {
-        const token = req.headers['x-access-token'];
-        const decoded = jwt.verify(token, secret);
-
-        if (decoded && decoded.roleId !== 1) {
-          res.status(403)
+      models.Roles.findById(user.roleId).then((role) => {
+        if (!role) {
+          res.status(400)
             .json({
               success: 'false',
-              message: 'You must be an admin user to create another admin user'
+              message: 'Please select a valid role'
             });
-          res.end();
-        }
-      } else {
-        userModel
-          .findOne({
-            where: {
-              $or: [{ username: user.username }, { email: user.email }]
-            }
-          }).then((result) => {
-            if (!result) {
-              userModel
-                .create(user)
-                .then((newUser) => {
-                  res.status(201).json({
-                    success: true,
-                    message: 'User created',
-                    data: newUser
-                  });
-                });
-            } else {
-              res.status(409).json({
-                success: false,
-                message: 'User already exists'
+        } else if (role.title === 'admin') {
+          const token = req.headers['x-access-token'];
+          const decoded = jwt.verify(token, secret);
+
+          if (decoded && decoded.roleId !== user.roleId) {
+            res.status(403)
+              .json({
+                success: 'false',
+                message: 'You must be an admin user to create another admin user'
               });
-            }
-          }).catch((err) => {
-            res.status(500).json({
-              success: false,
-              message: 'Server error',
-              error: err
+            res.end();
+          }
+        } else {
+          userModel
+            .findOne({
+              where: {
+                $or: [{ username: user.username }, { email: user.email }]
+              }
+            }).then((result) => {
+              if (!result) {
+                userModel
+                  .create(user)
+                  .then((newUser) => {
+                    res.status(201).json({
+                      success: true,
+                      message: 'User created',
+                      data: newUser
+                    });
+                  });
+              } else {
+                res.status(409).json({
+                  success: false,
+                  message: 'User already exists'
+                });
+              }
+            }).catch((err) => {
+              res.status(500).json({
+                success: false,
+                message: 'Server error',
+                error: err
+              });
             });
-          });
-      }
+        }
+      });
     }
   },
 
