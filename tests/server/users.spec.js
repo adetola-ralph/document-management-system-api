@@ -47,6 +47,41 @@ describe('User', () => {
       });
   });
 
+  it('non-authenticated users can\'t create an admin', (done) => {
+    api
+      .post('/api/users/')
+      .send(userData.adminUser2)
+      .expect(403)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('You must be authenticated to create an admin user');
+        done(err);
+      });
+  });
+
+  it('non-admin users can\'t create an admin', (done) => {
+    api
+      .post('/api/users/')
+      .set('x-access-token', normalToken)
+      .send(userData.adminUser2)
+      .expect(403)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('You must be an admin user to create another admin user');
+        done(err);
+      });
+  });
+
+  it('admin users can create another admin', (done) => {
+    api
+      .post('/api/users/')
+      .set('x-access-token', adminToken)
+      .send(userData.adminUser2)
+      .expect(201)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('User created');
+        done(err);
+      });
+  });
+
   it('should reject users with invalid roles', (done) => {
     api
       .post('/api/users/')
@@ -102,7 +137,7 @@ describe('User', () => {
       .set('x-access-token', adminToken)
       .expect(200)
       .end((err, res) => {
-        expect(res.body.data.length).to.equal(4);
+        expect(res.body.data.length).to.equal(5);
         done(err);
       });
   });
