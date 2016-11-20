@@ -41,7 +41,7 @@ const usersCtr = {
         if (!role) {
           res.status(400)
             .json({
-              success: 'false',
+              success: false,
               message: 'Please select a valid role'
             });
         } else if (role.title === 'admin') {
@@ -51,7 +51,7 @@ const usersCtr = {
           if (decoded && decoded.roleId !== user.roleId) {
             res.status(403)
               .json({
-                success: 'false',
+                success: false,
                 message: 'You must be an admin user to create another admin user'
               });
             res.end();

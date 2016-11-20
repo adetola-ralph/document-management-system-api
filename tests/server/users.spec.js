@@ -47,6 +47,17 @@ describe('User', () => {
       });
   });
 
+  it('should reject users with invalid roles', (done) => {
+    api
+      .post('/api/users/')
+      .send(userData.invalidUser2)
+      .expect(400)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Please select a valid role');
+        done(err);
+      });
+  });
+
   it('should not accept duplicate email address', (done) => {
     // duplicate email address
     api
