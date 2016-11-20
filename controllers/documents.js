@@ -97,17 +97,19 @@ const documentsCtr = {
               message: 'Document created',
               data: newDoc
             });
-          }).catch(() => {
+          }).catch((err) => {
             res.status(500).json({
               success: false,
-              message: 'Server error'
+              message: 'Server error',
+              error: err
             });
           });
         }
-      }).catch(() => {
+      }).catch((err) => {
         res.status(500).json({
           success: false,
-          message: 'Server error'
+          message: 'Server error',
+          error: err
         });
       });
     }
@@ -365,10 +367,11 @@ const documentsCtr = {
           });
         }
       }
-    }).catch(() => {
+    }).catch((err) => {
       res.status(500).json({
         success: false,
-        message: 'Server error'
+        message: 'Server error',
+        error: err
       });
     });
   }

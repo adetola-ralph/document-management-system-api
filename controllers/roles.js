@@ -12,10 +12,11 @@ const rolesCtr = {
           data: roles
         });
       })
-      .catch(() => {
+      .catch((err) => {
         res.status(500).json({
           success: false,
-          message: 'An error occured in the server'
+          message: 'An error occured in the server',
+          error: err
         });
       });
   },
@@ -31,7 +32,7 @@ const rolesCtr = {
         if (!role) {
           res.status(404).json({
             success: false,
-            message: 'role does not exist'
+            message: 'Role does not exist'
           });
         } else {
           res.status(200).json({
@@ -40,10 +41,11 @@ const rolesCtr = {
             data: role
           });
         }
-      }).catch(() => {
+      }).catch((err) => {
         res.status(500).json({
           success: false,
-          message: 'server error'
+          message: 'Server error',
+          error: err
         });
       });
   },
@@ -71,10 +73,11 @@ const rolesCtr = {
                 data: newRole
               });
             })
-            .catch(() => {
+            .catch((err) => {
               res.status(500).json({
                 success: false,
-                message: 'An error occured in the server'
+                message: 'Server error',
+                error: err
               });
             });
           } else {
@@ -99,7 +102,7 @@ const rolesCtr = {
         if (!role) {
           res.status(404).json({
             success: false,
-            message: 'role does not exist'
+            message: 'Role does not exist'
           });
         } else {
           models
@@ -114,17 +117,19 @@ const rolesCtr = {
                 success: true,
                 message: 'updated successfully'
               });
-            }).catch(() => {
+            }).catch((err) => {
               res.status(500).json({
                 success: false,
-                message: 'server error'
+                message: 'Server error',
+                error: err
               });
             });
         }
-      }).catch(() => {
+      }).catch((err) => {
         res.status(500).json({
           success: false,
-          message: 'server error'
+          message: 'Server error',
+          error: err
         });
       });
   },

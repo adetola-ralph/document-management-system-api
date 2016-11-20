@@ -28,11 +28,12 @@ const authorize = (req, res, next) => {
           message: 'Invalid role'
         });
     }
-  }).catch(() => {
+  }).catch((err) => {
     res.status(500)
       .json({
         success: 'false',
-        message: 'server error'
+        message: 'Server error',
+        error: err
       });
   });
 };

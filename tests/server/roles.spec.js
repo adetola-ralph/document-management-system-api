@@ -103,7 +103,7 @@ describe('Roles', () => {
       .set('x-access-token', adminToken)
       .expect(404)
       .end((err, res) => {
-        expect(res.body.message).to.equal('role does not exist');
+        expect(res.body.message).to.equal('Role does not exist');
         done(err);
       });
   });
@@ -127,7 +127,7 @@ describe('Roles', () => {
       .send({ title: 'regular' })
       .expect(404)
       .end((err, res) => {
-        expect(res.body.message).to.equal('role does not exist');
+        expect(res.body.message).to.equal('Role does not exist');
         done(err);
       });
   });

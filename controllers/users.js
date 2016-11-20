@@ -18,11 +18,12 @@ const usersCtr = {
             data: users
           });
       })
-      .catch(() => {
+      .catch((err) => {
         res.status(500)
           .json({
             success: false,
-            message: 'Server error'
+            message: 'Server error',
+            error: err
           });
       });
   },
@@ -71,10 +72,11 @@ const usersCtr = {
                 message: 'User already exists'
               });
             }
-          }).catch(() => {
+          }).catch((err) => {
             res.status(500).json({
               success: false,
-              message: 'Server error'
+              message: 'Server error',
+              error: err
             });
           });
       }
@@ -118,10 +120,11 @@ const usersCtr = {
           message: 'Role does not exist'
         });
       }
-    }).catch(() => {
+    }).catch((err) => {
       res.status(500).json({
         success: false,
         message: 'Server error',
+        error: err
       });
     });
   },
@@ -152,7 +155,7 @@ const usersCtr = {
             res.status(500).json({
               success: false,
               message: 'Update failed',
-              data: err
+              error: err
             });
           });
         } else {
@@ -167,10 +170,11 @@ const usersCtr = {
           message: 'Role does not exist'
         });
       }
-    }).catch(() => {
+    }).catch((err) => {
       res.status(500).json({
         success: false,
         message: 'Server error',
+        error: err
       });
     });
   },
@@ -199,10 +203,11 @@ const usersCtr = {
             message: 'User doesn\'t exist'
           });
         }
-      }).catch(() => {
+      }).catch((err) => {
         res.status(500).json({
           success: false,
-          message: 'Server error'
+          message: 'Server error',
+          error: err
         });
       });
     }

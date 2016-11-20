@@ -43,10 +43,11 @@ const authenticate = {
           message: 'Authentication failed: User not found'
         });
       }
-    }).catch(() => {
+    }).catch((err) => {
       res.status(500).json({
         success: false,
-        message: 'Server error'
+        message: 'Server error',
+        error: err
       });
     });
   },
