@@ -6,11 +6,7 @@ const authorize = (req, res, next) => {
   const decoded = req.decoded;
   const roleId = decoded.roleId;
 
-  roleModel.findOne({
-    where: {
-      id: roleId
-    }
-  }).then((role) => {
+  roleModel.findById(roleId).then((role) => {
     if (role) {
       if (role.title === 'admin') {
         next();

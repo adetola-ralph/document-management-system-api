@@ -118,11 +118,7 @@ const documentsCtr = {
     const decodedUser = req.decoded;
     const docId = req.params.id;
 
-    docModel.findOne({
-      where: {
-        id: docId
-      }
-    }).then((document) => {
+    docModel.findById(docId).then((document) => {
       if (document) {
         if (document.ownerId === decodedUser.id || document.access === 'public') {
           res.status(200).json({
@@ -204,11 +200,7 @@ const documentsCtr = {
     models.Roles.findById(decodedUser.roleId)
     .then((role) => {
       if (role) {
-        docModel.findOne({
-          where: {
-            id: docId
-          }
-        }).then((document) => {
+        docModel.findById(docId).then((document) => {
           if (role.title === 'admin' || document.ownerId === decodedUser.id) {
             docModel.update(docEdit, {
               where: {
@@ -263,11 +255,7 @@ const documentsCtr = {
     models.Roles.findById(decodedUser.roleId)
     .then((role) => {
       if (role) {
-        docModel.findOne({
-          where: {
-            id: docId
-          }
-        }).then((document) => {
+        docModel.findById(docId).then((document) => {
           if (role.title === 'admin' || document.ownerId === decodedUser.id) {
             docModel.destroy({
               where: {
@@ -324,11 +312,7 @@ const documentsCtr = {
     const uid = req.params.uid;
     const userRoleId = decoded.roleId;
 
-    models.Roles.findOne({
-      where: {
-        id: userRoleId
-      }
-    }).then((role) => {
+    models.Roles.findById(userRoleId).then((role) => {
       if (!role) {
         res.status(404).json({
           success: false,

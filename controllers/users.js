@@ -87,19 +87,11 @@ const usersCtr = {
     const userId = req.params.id;
     const decoded = req.decoded;
 
-    models.Roles.findOne({
-      where: {
-        id: decoded.roleId
-      }
-    }).then((role) => {
+    models.Roles.findById(decoded.roleId).then((role) => {
       if (role) {
         if (decoded.id === Number(userId) || role.title === 'admin') {
           userModel
-            .findOne({
-              where: {
-                id: userId
-              }
-            }).then((user) => {
+            .findById(userId).then((user) => {
               if (user) {
                 res.status(200).json({
                   success: true,
@@ -132,11 +124,7 @@ const usersCtr = {
     const userId = req.params.id;
     const decoded = req.decoded;
 
-    models.Roles.findOne({
-      where: {
-        id: decoded.roleId
-      }
-    }).then((role) => {
+    models.Roles.findById(decoded.roleId).then((role) => {
       if (role) {
         if (decoded.id === Number(userId) || role.title === 'admin') {
           userModel.update(req.body, {

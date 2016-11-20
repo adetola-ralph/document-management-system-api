@@ -15,7 +15,7 @@ const rolesCtr = {
       .catch((err) => {
         res.status(500).json({
           success: false,
-          message: 'An error occured in the server',
+          message: 'Server error',
           error: err
         });
       });
@@ -24,11 +24,7 @@ const rolesCtr = {
     const roleId = req.params.id;
     models
       .Roles
-      .findOne({
-        where: {
-          id: roleId
-        }
-      }).then((role) => {
+      .findById(roleId).then((role) => {
         if (!role) {
           res.status(404).json({
             success: false,
@@ -94,11 +90,7 @@ const rolesCtr = {
     const roleId = req.params.id;
     models
       .Roles
-      .findOne({
-        where: {
-          id: roleId
-        }
-      }).then((role) => {
+      .findById(roleId).then((role) => {
         if (!role) {
           res.status(404).json({
             success: false,
