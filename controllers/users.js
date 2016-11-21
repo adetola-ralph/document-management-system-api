@@ -103,28 +103,21 @@ const usersCtr = {
     const decoded = req.decoded;
 
     models.Roles.findById(decoded.roleId).then((role) => {
-      if (role) {
-        if (decoded.id === Number(userId) || role.title === 'admin') {
-          userModel
-            .findById(userId).then((user) => {
-              if (user) {
-                res.status(200).json({
-                  success: true,
-                  message: 'User retrieved',
-                  data: user
-                });
-              }
-            });
-        } else {
-          res.status(403).json({
-            success: false,
-            message: 'You\'re not allowed to perform this action'
+      if (decoded.id === Number(userId) || role.title === 'admin') {
+        userModel
+          .findById(userId).then((user) => {
+            if (user) {
+              res.status(200).json({
+                success: true,
+                message: 'User retrieved',
+                data: user
+              });
+            }
           });
-        }
       } else {
-        res.status(404).json({
+        res.status(403).json({
           success: false,
-          message: 'Role does not exist'
+          message: 'You\'re not allowed to perform this action'
         });
       }
     }).catch((err) => {
@@ -140,37 +133,30 @@ const usersCtr = {
     const decoded = req.decoded;
 
     models.Roles.findById(decoded.roleId).then((role) => {
-      if (role) {
-        if (decoded.id === Number(userId) || role.title === 'admin') {
-          userModel.update(req.body, {
-            where: {
-              id: userId
-            },
-            returning: true,
-            plain: true
-          }).then((updatedUser) => {
-            res.status(200).json({
-              success: true,
-              message: 'User detail update',
-              data: updatedUser[1].dataValues
-            });
-          }).catch((err) => {
-            res.status(500).json({
-              success: false,
-              message: 'Update failed',
-              error: err
-            });
+      if (decoded.id === Number(userId) || role.title === 'admin') {
+        userModel.update(req.body, {
+          where: {
+            id: userId
+          },
+          returning: true,
+          plain: true
+        }).then((updatedUser) => {
+          res.status(200).json({
+            success: true,
+            message: 'User detail update',
+            data: updatedUser[1].dataValues
           });
-        } else {
-          res.status(403).json({
+        }).catch((err) => {
+          res.status(500).json({
             success: false,
-            message: 'You\'re not allowed to perform this action'
+            message: 'Update failed',
+            error: err
           });
-        }
+        });
       } else {
-        res.status(404).json({
+        res.status(403).json({
           success: false,
-          message: 'Role does not exist'
+          message: 'You\'re not allowed to perform this action'
         });
       }
     }).catch((err) => {
