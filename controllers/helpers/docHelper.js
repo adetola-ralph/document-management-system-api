@@ -1,7 +1,8 @@
 const docHelper = {
   checkDocDetails: (req) => {
     const document = req.body;
-    if (!(document.title && document.content && document.access)) {
+    if (!(document.title && document.content && document.access &&
+      (document.access === 'public' || document.access === 'private' || document.access === 'role'))) {
       return false;
     }
     return true;

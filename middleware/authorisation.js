@@ -6,33 +6,30 @@ const authorize = (req, res, next) => {
   const decoded = req.decoded;
   const roleId = decoded.roleId;
 
-  roleModel.findOne({
-    where: {
-      id: roleId
-    }
-  }).then((role) => {
+  roleModel.findById(roleId).then((role) => {
     if (role) {
       if (role.title === 'admin') {
         next();
       } else {
         res.status(403)
           .json({
-            success: 'false',
+            success: false,
             message: 'Not authorised to perform this action'
           });
       }
     } else {
       res.status(403)
         .json({
-          success: 'false',
+          success: false,
           message: 'Invalid role'
         });
     }
-  }).catch(() => {
+  }).catch((err) => {
     res.status(500)
       .json({
-        success: 'false',
-        message: 'server error'
+        success: false,
+        message: 'Server error',
+        error: err
       });
   });
 };

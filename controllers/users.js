@@ -18,11 +18,12 @@ const usersCtr = {
             data: users
           });
       })
-      .catch(() => {
+      .catch((err) => {
         res.status(500)
           .json({
             success: false,
-            message: 'Server error'
+            message: 'Server error',
+            error: err
           });
       });
   },
@@ -36,19 +37,33 @@ const usersCtr = {
           message: 'All fields must be filled'
         });
     } else {
-      if (user.roleId === 1) {
-        const token = req.headers['x-access-token'];
-        const decoded = jwt.verify(token, secret);
-
-        if (decoded && decoded.roleId !== 1) {
-          res.status(403)
+      models.Roles.findById(user.roleId).then((role) => {
+        if (!role) {
+          return res.status(400)
             .json({
-              success: 'false',
-              message: 'You must be an admin user to create another admin user'
+              success: false,
+              message: 'Please select a valid role'
             });
-          res.end();
+        } else if (role.title === 'admin') {
+          const token = req.headers['x-access-token'];
+          if (token) {
+            const decoded = jwt.verify(token, secret);
+            if (decoded && decoded.roleId !== user.roleId) {
+              return res.status(403)
+                .json({
+                  success: false,
+                  message: 'You must be an admin user to create another admin user'
+                });
+            }
+          } else {
+            return res.status(403)
+              .json({
+                success: false,
+                message: 'You must be authenticated to create an admin user'
+              });
+          }
         }
-      } else {
+        // else {
         userModel
           .findOne({
             where: {
@@ -71,13 +86,15 @@ const usersCtr = {
                 message: 'User already exists'
               });
             }
-          }).catch(() => {
+          }).catch((err) => {
             res.status(500).json({
               success: false,
-              message: 'Server error'
+              message: 'Server error',
+              error: err
             });
           });
-      }
+        // }
+      });
     }
   },
 
@@ -85,43 +102,29 @@ const usersCtr = {
     const userId = req.params.id;
     const decoded = req.decoded;
 
-    models.Roles.findOne({
-      where: {
-        id: decoded.roleId
-      }
-    }).then((role) => {
-      if (role) {
-        if (decoded.id === Number(userId) || role.title === 'admin') {
-          userModel
-            .findOne({
-              where: {
-                id: userId
-              }
-            }).then((user) => {
-              if (user) {
-                res.status(200).json({
-                  success: true,
-                  message: 'User retrieved',
-                  data: user
-                });
-              }
-            });
-        } else {
-          res.status(403).json({
-            success: false,
-            message: 'You\'re not allowed to perform this action'
+    models.Roles.findById(decoded.roleId).then((role) => {
+      if (decoded.id === Number(userId) || role.title === 'admin') {
+        userModel
+          .findById(userId).then((user) => {
+            if (user) {
+              res.status(200).json({
+                success: true,
+                message: 'User retrieved',
+                data: user
+              });
+            }
           });
-        }
       } else {
-        res.status(404).json({
+        res.status(403).json({
           success: false,
-          message: 'Role does not exist'
+          message: 'You\'re not allowed to perform this action'
         });
       }
-    }).catch(() => {
+    }).catch((err) => {
       res.status(500).json({
         success: false,
         message: 'Server error',
+        error: err
       });
     });
   },
@@ -129,48 +132,38 @@ const usersCtr = {
     const userId = req.params.id;
     const decoded = req.decoded;
 
-    models.Roles.findOne({
-      where: {
-        id: decoded.roleId
-      }
-    }).then((role) => {
-      if (role) {
-        if (decoded.id === Number(userId) || role.title === 'admin') {
-          userModel.update(req.body, {
-            where: {
-              id: userId
-            },
-            returning: true,
-            plain: true
-          }).then((updatedUser) => {
-            res.status(200).json({
-              success: true,
-              message: 'User detail update',
-              data: updatedUser[1].dataValues
-            });
-          }).catch((err) => {
-            res.status(500).json({
-              success: false,
-              message: 'Update failed',
-              data: err
-            });
+    models.Roles.findById(decoded.roleId).then((role) => {
+      if (decoded.id === Number(userId) || role.title === 'admin') {
+        userModel.update(req.body, {
+          where: {
+            id: userId
+          },
+          returning: true,
+          plain: true
+        }).then((updatedUser) => {
+          res.status(200).json({
+            success: true,
+            message: 'User detail update',
+            data: updatedUser[1].dataValues
           });
-        } else {
-          res.status(403).json({
+        }).catch((err) => {
+          res.status(500).json({
             success: false,
-            message: 'You\'re not allowed to perform this action'
+            message: 'Update failed',
+            error: err
           });
-        }
+        });
       } else {
-        res.status(404).json({
+        res.status(403).json({
           success: false,
-          message: 'Role does not exist'
+          message: 'You\'re not allowed to perform this action'
         });
       }
-    }).catch(() => {
+    }).catch((err) => {
       res.status(500).json({
         success: false,
         message: 'Server error',
+        error: err
       });
     });
   },
@@ -199,10 +192,11 @@ const usersCtr = {
             message: 'User doesn\'t exist'
           });
         }
-      }).catch(() => {
+      }).catch((err) => {
         res.status(500).json({
           success: false,
-          message: 'Server error'
+          message: 'Server error',
+          error: err
         });
       });
     }

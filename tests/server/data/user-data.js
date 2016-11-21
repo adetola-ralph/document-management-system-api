@@ -26,12 +26,21 @@ module.exports = {
     password: 'Password',
     roleId: 2
   },
-  // administatrive role
+  // administatrive user
   adminUser: {
     firstname: 'Terwase',
     lastname: 'Gberikon',
     username: 'mrgberikon',
     email: 'mrgberikon@gmail.com',
+    password: 'Pasword12345',
+    roleId: 1
+  },
+  // administrative user
+  adminUser2: {
+    firstname: 'Terwase',
+    lastname: 'Gberikon',
+    username: 'mrgberikon1',
+    email: 'mrgberikon1@gmail.com',
     password: 'Pasword12345',
     roleId: 1
   },
