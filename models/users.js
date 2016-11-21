@@ -4,7 +4,7 @@ module.exports = function(sequelize, DataTypes) {
   const Users = sequelize.define('Users', {
     username: {
       type: DataTypes.STRING,
-      allowNull: false ,
+      allowNull: false,
       unique: true
     },
     firstname: {
@@ -23,7 +23,7 @@ module.exports = function(sequelize, DataTypes) {
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      set: function (value){
+      set: function (value) {
         this.setDataValue('password', bcrypt.hashSync(value, 10));
       }
     },

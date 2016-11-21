@@ -15,6 +15,14 @@ const documentsCtr = {
     models.Roles
       .findById(decodedUser.roleId)
       .then((role) => {
+        if (role.title !== 'admin') {
+          dbQuery.where = dbQuery.where || {};
+          dbQuery.where.$or = [{
+            access: 'public'
+          }, {
+            ownerId: decodedUser.id
+          }];
+        }
 
         if (role.title !== 'admin') {
           dbQuery.where = dbQuery.where || {};
