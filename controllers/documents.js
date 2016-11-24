@@ -43,7 +43,7 @@ const documentsCtr = {
                 data: documents
               });
             } else {
-              res.status(200).json({
+              res.status(404).json({
                 success: true,
                 message: 'No documents available',
                 data: []
@@ -303,7 +303,7 @@ const documentsCtr = {
               data: documents
             });
           } else {
-            res.status(200).json({
+            res.status(404).json({
               success: true,
               message: 'User doesn\'t have any document',
               data: []

@@ -147,7 +147,7 @@ describe('Document', () => {
     api
       .get('/api/users/4/documents/')
       .set('x-access-token', adminToken)
-      .expect(200)
+      .expect(404)
       .end((err, res) => {
         expect(res.body.message).to.equal('User doesn\'t have any document');
         expect(res.body.data).to.deep.equal([]);
