@@ -1,13 +1,14 @@
-const docHelper = {
-  checkDocDetails: (req) => {
+export default class docHelper {
+  static checkDocDetails(req) {
     const document = req.body;
     if (!(document.title && document.content && document.access &&
       (document.access === 'public' || document.access === 'private' || document.access === 'role'))) {
       return false;
     }
     return true;
-  },
-  queryBuilder: (reqQuery) => {
+  }
+
+  static queryBuilder(reqQuery) {
     const dbQuery = {
       order: [['createdAt', 'DESC']]
     };
@@ -33,6 +34,4 @@ const docHelper = {
 
     return dbQuery;
   }
-};
-
-module.exports = docHelper;
+}

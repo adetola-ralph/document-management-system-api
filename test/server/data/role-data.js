@@ -1,4 +1,4 @@
-module.exports = {
+const roleData = {
   guestRole: {
     title: 'guest'
   },
@@ -6,3 +6,5 @@ module.exports = {
     titles: 'guest'
   }
 };
+
+export default roleData;

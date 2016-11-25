@@ -1,4 +1,4 @@
-module.exports = {
+const userData = {
   // user with normal role 1
   normalUser1: {
     firstname: 'Oreofeoluwapo',
@@ -80,3 +80,5 @@ module.exports = {
     roleId: 2
   },
 };
+
+export default userData;

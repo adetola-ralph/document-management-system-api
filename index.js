@@ -1,7 +1,8 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const routes = require('./routes');
+import express from 'express';
+import bodyParser from 'body-parser';
+import morgan from 'morgan';
+import winston from 'winston';
+import routes from './routes';
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -19,6 +20,7 @@ routes(router);
 app.use('/api', router);
 
 app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+  winston.info(`Server started on port ${port}`);
 });
-module.exports = app;
+
+export default app;

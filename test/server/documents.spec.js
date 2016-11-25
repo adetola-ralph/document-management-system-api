@@ -1,13 +1,13 @@
-const expect = require('chai').expect;
-const supertest = require('supertest');
-const server = require('./../../index');
-const request = require('superagent');
+import chai from 'chai';
+import supertest from 'supertest';
+import request from 'superagent';
+import server from './../../index';
+import documentData from './data/document-data';
+import userData from './data/user-data';
 
 const api = supertest(server);
+const expect = chai.expect;
 
-
-const documentData = require('./data/document-data.js');
-const userData = require('./data/user-data.js');
 const docSeeder = require('./../../seeders/docSeeder');
 
 let adminToken, normalToken1, normalToken2;

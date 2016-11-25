@@ -1,4 +1,5 @@
-const models = require('./../models/index');
+import winston from 'winston';
+import models from './../models/';
 
 const user = models.Users;
 const role = models.Roles;
@@ -23,8 +24,8 @@ const userData = [
 role.bulkCreate(roleData).then(() => {
   user.bulkCreate(userData).then(() => {
   }).catch((err) => {
-    console.err(err);
+    winston.log('error', err);
   });
 }).catch((err) => {
-  console.err(err);
+  winston.log('error', err);
 });

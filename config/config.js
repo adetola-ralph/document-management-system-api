@@ -1,4 +1,4 @@
-const dotenv     = require('dotenv').config({ silent: true });
+const dotenv = require('dotenv').config({ silent: true });
 
 module.exports = {
   development: {

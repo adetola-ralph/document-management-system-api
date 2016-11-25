@@ -7,5 +7,3 @@ export default class AuthHelper {
     return true;
   }
 }
-
-// module.exports = authHelper;
