@@ -1,16 +1,16 @@
-const models = require('./../models/');
-const dotenv = require('dotenv').config({
-  silent: true
-});
-const docHelper = require('./helpers/docHelper.js');
+import dotenv from 'dotenv';
+import DocHelper from './helpers/docHelper';
+import models from './../models/';
+
+dotenv.config({ silent: true });
 
 const docModel = models.Documents;
 
-const documentsCtr = {
-  index: (req, res) => {
+export default class DocumentsController {
+  index(req, res) {
     const decodedUser = req.decoded;
     const queries = req.query;
-    const dbQuery = docHelper.queryBuilder(queries);
+    const dbQuery = DocHelper.queryBuilder(queries);
 
     models.Roles
       .findById(decodedUser.roleId)
@@ -42,7 +42,7 @@ const documentsCtr = {
                 data: documents
               });
             } else {
-              res.status(200).json({
+              res.status(404).json({
                 success: true,
                 message: 'No documents available',
                 data: []
@@ -62,12 +62,13 @@ const documentsCtr = {
           error: err
         });
       });
-  },
-  create: (req, res) => {
+  }
+
+  create(req, res) {
     const decodedUser = req.decoded;
     const document = req.body;
 
-    if (!docHelper.checkDocDetails(req, res)) {
+    if (!DocHelper.checkDocDetails(req, res)) {
       res.status(400)
         .json({
           success: false,
@@ -110,8 +111,9 @@ const documentsCtr = {
         });
       });
     }
-  },
-  show: (req, res) => {
+  }
+
+  show(req, res) {
     const decodedUser = req.decoded;
     const docId = req.params.id;
 
@@ -181,8 +183,9 @@ const documentsCtr = {
         error: err
       });
     });
-  },
-  update: (req, res) => {
+  }
+
+  update(req, res) {
     const decodedUser = req.decoded;
     const docEdit = req.body;
     const docId = req.params.id;
@@ -230,8 +233,9 @@ const documentsCtr = {
           error: err
         });
       });
-  },
-  delete: (req, res) => {
+  }
+
+  delete(req, res) {
     const decodedUser = req.decoded;
     const docId = req.params.id;
 
@@ -282,8 +286,9 @@ const documentsCtr = {
           error: err
         });
       });
-  },
-  getUserDoc: (req, res) => {
+  }
+
+  getUserDoc(req, res) {
     const decoded = req.decoded;
     const uid = req.params.uid;
     const userRoleId = decoded.roleId;
@@ -302,7 +307,7 @@ const documentsCtr = {
               data: documents
             });
           } else {
-            res.status(200).json({
+            res.status(404).json({
               success: true,
               message: 'User doesn\'t have any document',
               data: []
@@ -328,6 +333,4 @@ const documentsCtr = {
       });
     });
   }
-};
-
-module.exports = documentsCtr;
+}

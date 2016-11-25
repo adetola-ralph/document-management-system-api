@@ -1,13 +1,14 @@
-const expect = require('chai').expect;
-const supertest = require('supertest');
-const server = require('./../../index');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv').config({ silent: true });
-const userData = require('./data/user-data.js');
+import chai from 'chai';
+import supertest from 'supertest';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import server from './../../index';
+import userData from './data/user-data';
 
 const api = supertest(server);
 const secret = process.env.SECRET;
-
+const expect = chai.expect;
+dotenv.config({ silent: true });
 
 let adminToken;
 let normalToken;

@@ -1,23 +1,28 @@
-const expect = require('chai').expect;
-const supertest = require('supertest');
-const server = require('./../../index');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv').config({ silent: true });
-const roleData = require('./data/role-data');
-const userData = require('./data/user-data');
-const models = require('./../../models/index');
+import chai from 'chai';
+import supertest from 'supertest';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import winston from 'winston';
+import server from './../../index';
+import roleData from './data/role-data';
+import userData from './data/user-data';
+
+// const models = require('./../../models/index');
+import models from './../../models/';
 
 const api = supertest(server);
 const secret = process.env.SECRET;
+const expect = chai.expect;
 const userModel = models.Users;
 const roleModel = models.Roles;
+dotenv.config({ silent: true });
 let adminToken;
 let normalToken;
 
 before((done) => {
   roleModel.create({ title: 'admin' }).then(() => {});
   userModel.create(userData.adminUser).then((user) => {
-    console.log(`${user.username} created`);
+    winston.info(`${user.username} created`);
     adminToken = jwt.sign(user.dataValues, secret, {
       expiresIn: '24h'
     });
@@ -28,7 +33,7 @@ before((done) => {
 before((done) => {
   roleModel.create({ title: 'normal' }).then(() => {});
   userModel.create(userData.normalUser3).then((user) => {
-    console.log(`${user.username} created`);
+    winston.info(`${user.username} created`);
     normalToken = jwt.sign(user.dataValues, secret, {
       expiresIn: '24h'
     });

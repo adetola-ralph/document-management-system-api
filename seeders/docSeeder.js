@@ -1,4 +1,5 @@
-const models = require('./../models/index');
+import winston from 'winston';
+import models from './../models/';
 
 const doc = models.Documents;
 
@@ -78,9 +79,9 @@ const docData = [
 const docSeeder = {
   startSeed: () => {
     doc.bulkCreate(docData).then(() => {
-      console.log('Document table seeded');
+      winston.info('Document table seeded');
     }).catch((err) => {
-      console.err(err);
+      winston.log('error', err);
     });
   }
 };

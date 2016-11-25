@@ -1,7 +1,7 @@
-const models = require('./../models/');
+import models from './../models/';
 
-const rolesCtr = {
-  index: (req, res) => {
+export default class RoleController {
+  index(req, res) {
     models
       .Roles
       .findAll()
@@ -19,8 +19,9 @@ const rolesCtr = {
           error: err
         });
       });
-  },
-  show: (req, res) => {
+  }
+
+  show(req, res) {
     const roleId = req.params.id;
     models
       .Roles
@@ -44,8 +45,9 @@ const rolesCtr = {
           error: err
         });
       });
-  },
-  create: (req, res) => {
+  }
+
+  create(req, res) {
     const roleTitle = req.body.title || req.query.title;
     if (!roleTitle) {
       res.status(403).json({
@@ -84,8 +86,9 @@ const rolesCtr = {
           }
         });
     }
-  },
-  update: (req, res) => {
+  }
+
+  update(req, res) {
     const updatedTitle = req.body.title;
     const roleId = req.params.id;
     models
@@ -124,10 +127,9 @@ const rolesCtr = {
           error: err
         });
       });
-  },
-  delete: (req, res) => {
+  }
+
+  delete(req, res) {
 
   }
-};
-
-module.exports = rolesCtr;
+}

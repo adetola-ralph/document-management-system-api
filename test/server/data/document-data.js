@@ -1,4 +1,4 @@
-module.exports = {
+const documentData = {
   documentx: {
     title: 'document x',
     content: 'document x contents',
@@ -14,3 +14,5 @@ module.exports = {
     access: 'public'
   }
 };
+
+export default documentData;

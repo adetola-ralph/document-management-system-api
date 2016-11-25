@@ -1,15 +1,16 @@
-const models = require('./../models/');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv').config({ silent: true });
-const bcrypt = require('bcryptjs');
-// const authHelper = require('./helpers/authHelper.js');
-import AuthHelper from './helpers/authHelper.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+import AuthHelper from './helpers/authHelper';
+import models from './../models/';
+
+dotenv.config({ silent: true });
 
 const secret = process.env.SECRET;
 const userModel = models.Users;
 
-const authenticate = {
-  signin: (req, res) => {
+export default class AuthenticationController {
+  signin(req, res) {
     if (!AuthHelper.checkLoginDetails(req)) {
       res.status(400)
         .json({
@@ -55,10 +56,5 @@ const authenticate = {
         });
       });
     }
-  },
-  signout: (req, res) => {
-
   }
-};
-
-module.exports = authenticate;
+}

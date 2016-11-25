@@ -1,11 +1,9 @@
-const roleRoutes = require('./roles');
-const userRoutes = require('./users');
-const documentRoutes = require('./documents');
+import roleRoutes from './roles';
+import userRoutes from './users';
+import documentRoutes from './documents';
 
-const routes = (router) => {
+export default function routes(router) {
   roleRoutes(router);
   userRoutes(router);
   documentRoutes(router);
-};
-
-module.exports = routes;
+}

@@ -1,20 +1,20 @@
-const docCtr = require('./../controllers/documents.js');
-const authentication = require('./../middleware/authentication');
+import Authentication from './../middleware/authentication';
+import DocumentController from './../controllers/documents';
 
-const documentRoutes = (router) => {
+const DocCtr = new DocumentController();
+
+export default function documentRoutes(router) {
   router
     .route('/documents')
-    .post(authentication, docCtr.create)
-    .get(authentication, docCtr.index);
+    .post(Authentication.checkAuthentication, DocCtr.create)
+    .get(Authentication.checkAuthentication, DocCtr.index);
 
   router
     .route('/documents/:id')
-    .get(authentication, docCtr.show)
-    .put(authentication, docCtr.update)
-    .delete(authentication, docCtr.delete);
+    .get(Authentication.checkAuthentication, DocCtr.show)
+    .put(Authentication.checkAuthentication, DocCtr.update)
+    .delete(Authentication.checkAuthentication, DocCtr.delete);
 
   router
-    .get('/users/:uid/documents/', authentication, docCtr.getUserDoc);
-};
-
-module.exports = documentRoutes;
+    .get('/users/:uid/documents/', Authentication.checkAuthentication, DocCtr.getUserDoc);
+}
