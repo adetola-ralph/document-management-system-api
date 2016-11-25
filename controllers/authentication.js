@@ -2,14 +2,15 @@ const models = require('./../models/');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config({ silent: true });
 const bcrypt = require('bcryptjs');
-const authHelper = require('./helpers/authHelper.js');
+// const authHelper = require('./helpers/authHelper.js');
+import AuthHelper from './helpers/authHelper.js';
 
 const secret = process.env.SECRET;
 const userModel = models.Users;
 
 const authenticate = {
   signin: (req, res) => {
-    if (!authHelper.checkLoginDetails(req)) {
+    if (!AuthHelper.checkLoginDetails(req)) {
       res.status(400)
         .json({
           success: false,
