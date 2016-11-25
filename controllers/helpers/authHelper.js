@@ -1,16 +1,11 @@
-const authHelper = {
-  checkLoginDetails: (req, res) => {
-    let user = req.body;
+export default class AuthHelper {
+  static checkLoginDetails(req) {
+    const user = req.body;
     if (!(user.username && user.password)) {
-      res.status(400)
-        .json({
-          success: false,
-          message: 'All fields must be filled'
-        });
-      res.end();
-      return true;
+      return false;
     }
+    return true;
   }
-};
+}
 
-module.exports = authHelper;
+// module.exports = authHelper;

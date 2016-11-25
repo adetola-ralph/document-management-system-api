@@ -8,7 +8,7 @@
     "set-db": "dropdb --if-exists document_db && createdb document_db",
     "migration": "npm run-script set-test-db && sequelize db:migrate",
     "pretest": "NODE_ENV=test npm run-script migration",
-    "test": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha --report lcovonly tests/server/tests.spec.js",
+    "test": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha -- --compilers js:babel-core/register",
     "start": "nodemon index.js",
     "seed": "node seed.js && node docSeeder.js",
     "coverage": "rm -rf coverage/",
@@ -44,6 +44,11 @@
     "sequelize": "^3.24.6"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-istanbul": "^0.11.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.14",
     "eslint": "^3.10.2",
