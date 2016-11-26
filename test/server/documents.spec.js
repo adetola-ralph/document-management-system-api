@@ -4,11 +4,10 @@ import request from 'superagent';
 import server from './../../index';
 import documentData from './data/document-data';
 import userData from './data/user-data';
+import DocSeeder from './../../seeders/docSeeder';
 
 const api = supertest(server);
 const expect = chai.expect;
-
-const docSeeder = require('./../../seeders/docSeeder');
 
 let adminToken, normalToken1, normalToken2;
 
@@ -55,7 +54,7 @@ describe('Document', () => {
   });
 
   before((done) => {
-    docSeeder.startSeed();
+    DocSeeder.startSeed();
     done();
   });
 

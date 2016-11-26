@@ -4,12 +4,14 @@ import models from './../models/';
 const user = models.Users;
 const role = models.Roles;
 
+// default roles present in the application
 const roleData = [
   { title: 'admin' },
   { title: 'normal' },
   { title: 'guest' }
 ];
 
+// first iser in the databse
 const userData = [
   {
     firstname: 'Adunoluwa',
@@ -21,6 +23,7 @@ const userData = [
   }
 ];
 
+// bulk adds the role and user objects into the databse
 role.bulkCreate(roleData).then(() => {
   user.bulkCreate(userData).then(() => {
   }).catch((err) => {

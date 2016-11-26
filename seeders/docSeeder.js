@@ -3,6 +3,7 @@ import models from './../models/';
 
 const doc = models.Documents;
 
+// data to be seeded into the databse
 const docData = [
   {
     title: 'document 1',
@@ -76,14 +77,27 @@ const docData = [
   }
 ];
 
-const docSeeder = {
-  startSeed: () => {
+// add the object above into the database
+
+ /**
+  * DocSeeder
+  *
+  * adds a document object into the database
+  */
+export default class DocSeeder {
+
+  /**
+   * Start Seed
+   *
+   * method that bulk adds the document object into the databse
+   *
+   * @return {null} doesn't return anything
+   */
+  static startSeed() {
     doc.bulkCreate(docData).then(() => {
       winston.info('Document table seeded');
     }).catch((err) => {
       winston.log('error', err);
     });
   }
-};
-
-module.exports = docSeeder;
+}

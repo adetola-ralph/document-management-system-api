@@ -1,6 +1,23 @@
 import models from './../models/';
 
+ /**
+  * RoleController
+  *
+  * controller class that handles all actions concerning roles resource
+  */
 export default class RoleController {
+  /**
+   * Index
+   *
+   * index method allows only authorised users (admin role) to get all the
+   * roles from the db
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   index(req, res) {
     models
       .Roles
@@ -21,6 +38,17 @@ export default class RoleController {
       });
   }
 
+  /**
+   * Show
+   *
+   * show method gets a role from the db depending on the id given in the link
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   show(req, res) {
     const roleId = req.params.id;
     models
@@ -47,6 +75,17 @@ export default class RoleController {
       });
   }
 
+  /**
+   * Create
+   *
+   * create method allows authorised users to create new roles
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   create(req, res) {
     const roleTitle = req.body.title || req.query.title;
     if (!roleTitle) {
@@ -88,6 +127,17 @@ export default class RoleController {
     }
   }
 
+  /**
+   * Update
+   *
+   * update method allows for changing and updating details of an existing role
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   update(req, res) {
     const updatedTitle = req.body.title;
     const roleId = req.params.id;

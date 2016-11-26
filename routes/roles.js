@@ -4,7 +4,16 @@ import RoleController from './../controllers/roles';
 
 const RoleCtr = new RoleController();
 
-export default function roleRouter(router) {
+/**
+ * Role Routes
+ *
+ * roleRoutes manages the routes for the role resource
+ *
+ * @param {Object} router express router object that gets attached to all the
+ * role routes
+ * @return {null} doesn't return anything
+ */
+export default function roleRoutes(router) {
   router
     .route('/roles')
     .get(Authentication.checkAuthentication, Authorisation.checkAuthorisation, RoleCtr.index)
