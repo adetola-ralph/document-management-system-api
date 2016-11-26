@@ -9,47 +9,51 @@ const userModel = models.Users;
 
 const authenticate = {
   signin: (req, res) => {
-    if (authHelper.checkLoginDetails(req, res)) {
-      return;
-    }
+    if (!authHelper.checkLoginDetails(req)) {
+      res.status(400)
+        .json({
+          success: false,
+          message: 'All fields must be filled'
+        });
+    } else {
+      const username = req.body.username;
+      const password = req.body.password;
 
-    const username = req.body.username;
-    const password = req.body.password;
-
-    userModel.findOne({
-      where: {
-        username
-      }
-    }).then((user) => {
-      if (user) {
-        if (bcrypt.compareSync(password, user.password)) {
-          const token = jwt.sign(user.dataValues, secret, {
-            expiresIn: '24h'
-          });
-          res.status(200).json({
-            success: true,
-            message: 'Authentication successful',
-            data: token
-          });
+      userModel.findOne({
+        where: {
+          username
+        }
+      }).then((user) => {
+        if (user) {
+          if (bcrypt.compareSync(password, user.password)) {
+            const token = jwt.sign(user.dataValues, secret, {
+              expiresIn: '24h'
+            });
+            res.status(200).json({
+              success: true,
+              message: 'Authentication successful',
+              data: token
+            });
+          } else {
+            res.status(403).json({
+              success: false,
+              message: 'Authentication failed: Wrong password'
+            });
+          }
         } else {
-          res.status(403).json({
+          res.status(404).json({
             success: false,
-            message: 'Authentication failed: Wrong password'
+            message: 'Authentication failed: User not found'
           });
         }
-      } else {
-        res.status(404).json({
+      }).catch((err) => {
+        res.status(500).json({
           success: false,
-          message: 'Authentication failed: User not found'
+          message: 'Server error',
+          error: err
         });
-      }
-    }).catch((err) => {
-      res.status(500).json({
-        success: false,
-        message: 'Server error',
-        error: err
       });
-    });
+    }
   },
   signout: (req, res) => {
 
