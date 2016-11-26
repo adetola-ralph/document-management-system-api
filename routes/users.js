@@ -1,22 +1,32 @@
-const userCtr = require('./../controllers/users.js');
-const userAuth = require('./../controllers/authentication.js');
-const authentication = require('./../middleware/authentication');
-const authorisation = require('./../middleware/authorisation');
+import Authentication from './../middleware/authentication';
+import Authorisation from './../middleware/authorisation';
+import AuthenticationController from './../controllers/authentication';
+import UserController from './../controllers/users';
 
-const userRoutes = (router) => {
+const UserCtr = new UserController();
+const AuthController = new AuthenticationController();
+
+/**
+ * user Routes
+ *
+ * userRoutes manages the routes for the user resource
+ *
+ * @param {Object} router express router object that gets attached to all the
+ * document routes
+ * @return {null} doesn't return anything
+ */
+export default function userRoutes(router) {
   router
     .route('/users')
-    .post(userCtr.create)
-    .get(authentication, authorisation, userCtr.index);
+    .post(UserCtr.create)
+    .get(Authentication.checkAuthentication, Authorisation.checkAuthorisation, UserCtr.index);
 
   router
     .route('/users/:id')
-    .get(authentication, userCtr.show)
-    .put(authentication, userCtr.update)
-    .delete(authentication, authorisation, userCtr.delete);
+    .get(Authentication.checkAuthentication, UserCtr.show)
+    .put(Authentication.checkAuthentication, UserCtr.update)
+    .delete(Authentication.checkAuthentication, Authorisation.checkAuthorisation, UserCtr.delete);
 
-  router.post('/users/login', userAuth.signin);
-  router.post('/users/logout', userAuth.signout);
-};
-
-module.exports = userRoutes;
+  // route that deals with user signin
+  router.post('/users/login', AuthController.signin);
+}

@@ -1,11 +1,18 @@
-const roleRoutes = require('./roles');
-const userRoutes = require('./users');
-const documentRoutes = require('./documents');
+import roleRoutes from './roles';
+import userRoutes from './users';
+import documentRoutes from './documents';
 
-const routes = (router) => {
+/**
+ * routes
+ *
+ * routes functions exports all the routes to be attached to the express
+ * router object
+ *
+ * @param {type} router express router object that gets attached to the routes
+ * @return {null} doesn't return anything
+ */
+export default function routes(router) {
   roleRoutes(router);
   userRoutes(router);
   documentRoutes(router);
-};
-
-module.exports = routes;
+}

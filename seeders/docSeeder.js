@@ -1,7 +1,9 @@
-const models = require('./../models/index');
+import winston from 'winston';
+import models from './../models/';
 
 const doc = models.Documents;
 
+// data to be seeded into the databse
 const docData = [
   {
     title: 'document 1',
@@ -75,14 +77,27 @@ const docData = [
   }
 ];
 
-const docSeeder = {
-  startSeed: () => {
+// add the object above into the database
+
+ /**
+  * DocSeeder
+  *
+  * adds a document object into the database
+  */
+export default class DocSeeder {
+
+  /**
+   * Start Seed
+   *
+   * method that bulk adds the document object into the databse
+   *
+   * @return {null} doesn't return anything
+   */
+  static startSeed() {
     doc.bulkCreate(docData).then(() => {
-      console.log('Document table seeded');
+      winston.info('Document table seeded');
     }).catch((err) => {
-      console.err(err);
+      winston.log('error', err);
     });
   }
-};
-
-module.exports = docSeeder;
+}

@@ -8,8 +8,8 @@
     "set-db": "dropdb --if-exists document_db && createdb document_db",
     "migration": "npm run-script set-test-db && sequelize db:migrate",
     "pretest": "NODE_ENV=test npm run-script migration",
-    "test": "NODE_ENV=test istanbul cover node_modules/.bin/_mocha --report lcovonly tests/server/tests.spec.js",
-    "start": "nodemon index.js",
+    "test": "NODE_ENV=test babel-node  node_modules/babel-istanbul/lib/cli.js  cover node_modules/.bin/_mocha --report lcovonly",
+    "start": "nodemon index.js --exec babel-node --presets es2015,stage-2",
     "seed": "node seed.js && node docSeeder.js",
     "coverage": "rm -rf coverage/",
     "coveralls": "cat coverage/lcov.info | coveralls"
@@ -41,9 +41,15 @@
     "morgan": "^1.7.0",
     "pg": "^6.1.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^3.24.6"
+    "sequelize": "^3.24.6",
+    "winston": "^2.3.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-istanbul": "^0.11.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "coveralls": "^2.11.14",
     "eslint": "^3.10.2",

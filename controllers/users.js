@@ -1,14 +1,33 @@
-const models = require('./../models/');
-const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv').config({ silent: true });
-const userHelper = require('./helpers/userHelpers.js');
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import UserHelper from './helpers/userHelpers';
+import models from './../models/';
 
+dotenv.config({ silent: true });
 const secret = process.env.SECRET;
 const userModel = models.Users;
 
 
-const usersCtr = {
-  index: (req, res) => {
+ /**
+  * UserController
+  *
+  * controller class that handles actions to be taken out on the user resource
+  */
+export default class UserController {
+
+  /**
+   * Index
+   *
+   * index method gets all the users in the database if the requester is
+   * authorised
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
+  index(req, res) {
     userModel.findAll()
       .then((users) => {
         res.status(200)
@@ -26,11 +45,24 @@ const usersCtr = {
             error: err
           });
       });
-  },
-  // called for signup
-  create: (req, res) => {
+  }
+
+
+  /**
+   * Create
+   *
+   * create method adds a new user to the application. Note that only admin
+   * users can create another admin user
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
+  create(req, res) {
     const user = req.body;
-    if (!userHelper.checkDetails(req)) {
+    if (!UserHelper.checkDetails(req)) {
       res.status(400)
         .json({
           success: false,
@@ -63,7 +95,6 @@ const usersCtr = {
               });
           }
         }
-        // else {
         userModel
           .findOne({
             where: {
@@ -93,12 +124,23 @@ const usersCtr = {
               error: err
             });
           });
-        // }
       });
     }
-  },
+  }
 
-  show: (req, res) => {
+  /**
+   * Show
+   *
+   * show method returns a user matching the id parameter sent in the request
+   * string. A non-admin user can only view their own user information
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
+  show(req, res) {
     const userId = req.params.id;
     const decoded = req.decoded;
 
@@ -127,8 +169,21 @@ const usersCtr = {
         error: err
       });
     });
-  },
-  update: (req, res) => {
+  }
+
+  /**
+   * Update
+   *
+   * update method handles changing and updating users information in the
+   * database. Note that a non-admin user can only update their own details
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
+  update(req, res) {
     const userId = req.params.id;
     const decoded = req.decoded;
 
@@ -166,8 +221,21 @@ const usersCtr = {
         error: err
       });
     });
-  },
-  delete: (req, res) => {
+  }
+
+  /**
+   * Delete
+   *
+   * delete method removes a user from the database. This action can only be
+   * carried out by an admin user.
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
+  delete(req, res) {
     const userId = req.params.id;
 
     if (userId === req.decoded.id) {
@@ -201,6 +269,4 @@ const usersCtr = {
       });
     }
   }
-};
-
-module.exports = usersCtr;
+}

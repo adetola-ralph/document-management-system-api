@@ -1,20 +1,31 @@
-const docCtr = require('./../controllers/documents.js');
-const authentication = require('./../middleware/authentication');
+import Authentication from './../middleware/authentication';
+import DocumentController from './../controllers/documents';
 
-const documentRoutes = (router) => {
+const DocCtr = new DocumentController();
+
+
+/**
+ * Document Routes
+ *
+ * documentRoutes manages the routes for the document resource
+ *
+ * @param {Object} router express router object that gets attached to all the
+ * document routes
+ * @return {null} doesn't return anything
+ */
+export default function documentRoutes(router) {
   router
     .route('/documents')
-    .post(authentication, docCtr.create)
-    .get(authentication, docCtr.index);
+    .post(Authentication.checkAuthentication, DocCtr.create)
+    .get(Authentication.checkAuthentication, DocCtr.index);
 
   router
     .route('/documents/:id')
-    .get(authentication, docCtr.show)
-    .put(authentication, docCtr.update)
-    .delete(authentication, docCtr.delete);
+    .get(Authentication.checkAuthentication, DocCtr.show)
+    .put(Authentication.checkAuthentication, DocCtr.update)
+    .delete(Authentication.checkAuthentication, DocCtr.delete);
 
+  // route to get all documents relating to a user id
   router
-    .get('/users/:uid/documents/', authentication, docCtr.getUserDoc);
-};
-
-module.exports = documentRoutes;
+    .get('/users/:uid/documents/', Authentication.checkAuthentication, DocCtr.getUserDoc);
+}

@@ -1,9 +1,10 @@
-const expect = require('chai').expect;
-const supertest = require('supertest');
-const server = require('./../../index');
+import chai from 'chai';
+import supertest from 'supertest';
+import server from './../../index';
+import userData from './data/user-data';
 
 const api = supertest(server);
-const userData = require('./data/user-data.js');
+const expect = chai.expect;
 
 describe('User authentication', () => {
   it('should expect all fields to be filled', (done) => {

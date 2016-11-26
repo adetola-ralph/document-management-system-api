@@ -1,7 +1,24 @@
-const models = require('./../models/');
+import models from './../models/';
 
-const rolesCtr = {
-  index: (req, res) => {
+ /**
+  * RoleController
+  *
+  * controller class that handles all actions concerning roles resource
+  */
+export default class RoleController {
+  /**
+   * Index
+   *
+   * index method allows only authorised users (admin role) to get all the
+   * roles from the db
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
+  index(req, res) {
     models
       .Roles
       .findAll()
@@ -19,8 +36,20 @@ const rolesCtr = {
           error: err
         });
       });
-  },
-  show: (req, res) => {
+  }
+
+  /**
+   * Show
+   *
+   * show method gets a role from the db depending on the id given in the link
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
+  show(req, res) {
     const roleId = req.params.id;
     models
       .Roles
@@ -44,8 +73,20 @@ const rolesCtr = {
           error: err
         });
       });
-  },
-  create: (req, res) => {
+  }
+
+  /**
+   * Create
+   *
+   * create method allows authorised users to create new roles
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
+  create(req, res) {
     const roleTitle = req.body.title || req.query.title;
     if (!roleTitle) {
       res.status(403).json({
@@ -84,8 +125,20 @@ const rolesCtr = {
           }
         });
     }
-  },
-  update: (req, res) => {
+  }
+
+  /**
+   * Update
+   *
+   * update method allows for changing and updating details of an existing role
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
+  update(req, res) {
     const updatedTitle = req.body.title;
     const roleId = req.params.id;
     models
@@ -124,10 +177,9 @@ const rolesCtr = {
           error: err
         });
       });
-  },
-  delete: (req, res) => {
+  }
+
+  delete(req, res) {
 
   }
-};
-
-module.exports = rolesCtr;
+}
