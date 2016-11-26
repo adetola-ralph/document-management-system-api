@@ -3,6 +3,16 @@ import DocumentController from './../controllers/documents';
 
 const DocCtr = new DocumentController();
 
+
+/**
+ * Document Routes
+ *
+ * documentRoutes manages the routes for the document resource
+ *
+ * @param {Object} router express router object that gets attached to all the
+ * document routes
+ * @return {null} doesn't return anything
+ */
 export default function documentRoutes(router) {
   router
     .route('/documents')
@@ -15,6 +25,7 @@ export default function documentRoutes(router) {
     .put(Authentication.checkAuthentication, DocCtr.update)
     .delete(Authentication.checkAuthentication, DocCtr.delete);
 
+  // route to get all documents relating to a user id
   router
     .get('/users/:uid/documents/', Authentication.checkAuthentication, DocCtr.getUserDoc);
 }

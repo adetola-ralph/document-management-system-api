@@ -9,7 +9,25 @@ dotenv.config({ silent: true });
 const secret = process.env.SECRET;
 const userModel = models.Users;
 
+
+/**
+ * Authentication Controller
+ *
+ * controller class that handles the login for anything relating to user
+ * authentication
+ */
 export default class AuthenticationController {
+  /**
+   * Signin
+   *
+   * signin method that handles users signing in to the application
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   signin(req, res) {
     if (!AuthHelper.checkLoginDetails(req)) {
       res.status(400)

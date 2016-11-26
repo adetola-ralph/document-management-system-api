@@ -6,6 +6,15 @@ import UserController from './../controllers/users';
 const UserCtr = new UserController();
 const AuthController = new AuthenticationController();
 
+/**
+ * user Routes
+ *
+ * userRoutes manages the routes for the user resource
+ *
+ * @param {Object} router express router object that gets attached to all the
+ * document routes
+ * @return {null} doesn't return anything
+ */
 export default function userRoutes(router) {
   router
     .route('/users')
@@ -18,5 +27,6 @@ export default function userRoutes(router) {
     .put(Authentication.checkAuthentication, UserCtr.update)
     .delete(Authentication.checkAuthentication, Authorisation.checkAuthorisation, UserCtr.delete);
 
+  // route that deals with user signin
   router.post('/users/login', AuthController.signin);
 }

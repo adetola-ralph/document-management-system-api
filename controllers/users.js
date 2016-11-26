@@ -8,7 +8,25 @@ const secret = process.env.SECRET;
 const userModel = models.Users;
 
 
+ /**
+  * UserController
+  *
+  * controller class that handles actions to be taken out on the user resource
+  */
 export default class UserController {
+
+  /**
+   * Index
+   *
+   * index method gets all the users in the database if the requester is
+   * authorised
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   index(req, res) {
     userModel.findAll()
       .then((users) => {
@@ -29,7 +47,19 @@ export default class UserController {
       });
   }
 
-  // called for signup
+
+  /**
+   * Create
+   *
+   * create method adds a new user to the application. Note that only admin
+   * users can create another admin user
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   create(req, res) {
     const user = req.body;
     if (!UserHelper.checkDetails(req)) {
@@ -98,6 +128,18 @@ export default class UserController {
     }
   }
 
+  /**
+   * Show
+   *
+   * show method returns a user matching the id parameter sent in the request
+   * string. A non-admin user can only view their own user information
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   show(req, res) {
     const userId = req.params.id;
     const decoded = req.decoded;
@@ -129,6 +171,18 @@ export default class UserController {
     });
   }
 
+  /**
+   * Update
+   *
+   * update method handles changing and updating users information in the
+   * database. Note that a non-admin user can only update their own details
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   update(req, res) {
     const userId = req.params.id;
     const decoded = req.decoded;
@@ -169,6 +223,18 @@ export default class UserController {
     });
   }
 
+  /**
+   * Delete
+   *
+   * delete method removes a user from the database. This action can only be
+   * carried out by an admin user.
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   delete(req, res) {
     const userId = req.params.id;
 

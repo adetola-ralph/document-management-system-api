@@ -6,7 +6,26 @@ dotenv.config({ silent: true });
 
 const docModel = models.Documents;
 
+/**
+ * Documents controller
+ *
+ * controller class that handles all actions to be carried out on the document
+ * resource
+ */
 export default class DocumentsController {
+
+  /**
+   * Index
+   *
+   * index method gets all the documents in the database based on the requesters
+   * role and queries fed to it
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   index(req, res) {
     const decodedUser = req.decoded;
     const queries = req.query;
@@ -65,6 +84,17 @@ export default class DocumentsController {
       });
   }
 
+  /**
+   * Create
+   *
+   * create method creates a document for the requester
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   create(req, res) {
     const decodedUser = req.decoded;
     const document = req.body;
@@ -114,6 +144,18 @@ export default class DocumentsController {
     }
   }
 
+  /**
+   * Show
+   *
+   * show method gets a document from the databse based on the id supplied
+   * to the method and the role of the requester
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   show(req, res) {
     const decodedUser = req.decoded;
     const docId = req.params.id;
@@ -186,6 +228,18 @@ export default class DocumentsController {
     });
   }
 
+  /**
+   * Update
+   *
+   * update method updates the details of a document depending on the
+   * role of the requester or if the requester is the documents owner
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   update(req, res) {
     const decodedUser = req.decoded;
     const docEdit = req.body;
@@ -236,6 +290,18 @@ export default class DocumentsController {
       });
   }
 
+  /**
+   * Delete
+   *
+   * delete method removes a document from the databse depending on the role of
+   * the requester and if the requester is the creator of the document
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   delete(req, res) {
     const decodedUser = req.decoded;
     const docId = req.params.id;
@@ -289,6 +355,19 @@ export default class DocumentsController {
       });
   }
 
+  /**
+   * Get User Doc
+   *
+   * gets all documents relating to a particular use, it returns the documents
+   * depending on the role of the requester or if the requester is the same
+   * as the user whose documents are being requested
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
   getUserDoc(req, res) {
     const decoded = req.decoded;
     const uid = req.params.uid;
