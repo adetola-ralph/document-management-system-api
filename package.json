@@ -9,8 +9,8 @@
     "migration": "npm run-script set-test-db && node_modules/.bin/sequelize db:migrate",
     "pretest": "NODE_ENV=test npm run-script migration",
     "test": "NODE_ENV=test babel-node  node_modules/babel-istanbul/lib/cli.js  cover node_modules/.bin/_mocha --report lcovonly",
-    "start": "node_modules/.bin/sequelize db:migrate && npm run-script seed && nodemon index.js --exec babel-node --presets es2015,stage-2",
-    "seed": "babel-node seeders/seed.js --presets es2015,stage-2 && babel-node seeders/docSeeder.js --presets es2015,stage-2",
+    "start": "node_modules/.bin/sequelize db:migrate && npm run-script seed && nodemon index.js --exec node_modules/.bin/babel-node --presets es2015,stage-2",
+    "seed": "node_modules/.bin/babel-node seeders/seed.js --presets es2015,stage-2 && node_modules/.bin/babel-node seeders/docSeeder.js --presets es2015,stage-2",
     "coverage": "rm -rf coverage/",
     "coveralls": "cat coverage/lcov.info | coveralls"
   },
@@ -33,6 +33,9 @@
   },
   "homepage": "https://github.com/andela-oolutola/document-management-system-api#readme",
   "dependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-2": "^6.18.0",
     "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.2",
     "dotenv": "^2.0.0",
