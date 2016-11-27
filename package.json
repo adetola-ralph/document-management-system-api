@@ -9,8 +9,8 @@
     "migration": "npm run-script set-test-db && node_modules/.bin/sequelize db:migrate",
     "pretest": "NODE_ENV=test npm run-script migration",
     "test": "NODE_ENV=test babel-node  node_modules/babel-istanbul/lib/cli.js  cover node_modules/.bin/_mocha --report lcovonly",
-    "start": "node_modules/.bin/sequelize db:migrate && npm run-script seed && nodemon index.js --exec babel-node --presets es2015,stage-2",
-    "seed": "node seed.js && node docSeeder.js",
+    "start": "npm run-script set-db && node_modules/.bin/sequelize db:migrate && npm run-script seed && nodemon index.js --exec babel-node --presets es2015,stage-2",
+    "seed": "babel-node seeders/seed.js --presets es2015,stage-2 && babel-node seeders/docSeeder.js --presets es2015,stage-2",
     "coverage": "rm -rf coverage/",
     "coveralls": "cat coverage/lcov.info | coveralls"
   },
