@@ -20,10 +20,10 @@ module.exports = {
     logging: false
   },
   production: {
-    username: 'update me',
-    password: 'update me',
-    database: 'update me',
-    host: 'update me',
-    dialect: 'update me'
+    username: 'lmkbskydpdegxy',
+    password: 'z1Rq8motj0UKwceWa2FgVQOCwX',
+    database: 'db3umhfs4kesgb',
+    host: 'ec2-54-75-228-85.eu-west-1.compute.amazonaws.com',
+    dialect: 'postgres'
   }
 };
