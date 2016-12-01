@@ -39,4 +39,21 @@ describe('Search', () => {
         done(err);
       });
   });
+
+  it('role and date can be set for documents search', (done) => {
+    const d = new Date();
+    const day = d.getDate();
+    const month = d.getMonth() + 1;
+    const year = d.getFullYear();
+    const date = `${year}-${month}-${day}`;
+    api
+      .get(`/api/documents?limit=6&date=${date}&role=2`)
+      .set('x-access-token', adminToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Documents retreived');
+        expect(res.body.data.length).to.be.at.most(6);
+        done(err);
+      });
+  });
 });

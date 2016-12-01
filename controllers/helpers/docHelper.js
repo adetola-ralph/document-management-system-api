@@ -51,6 +51,9 @@ export default class DocHelper {
     if (queries.indexOf('limit') > -1) {
       dbQuery.limit = reqQuery.limit;
     }
+    if (queries.indexOf('role') > -1) {
+      dbQuery.ownerRoleId = reqQuery.role;
+    }
     if (queries.indexOf('date') > -1) {
       const nextDate = new Date(reqQuery.date);
 
