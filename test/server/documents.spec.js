@@ -58,7 +58,7 @@ describe('Document', () => {
     done();
   });
 
-  it('Only registered users can create documents', (done) => {
+  it('only registered users can create documents', (done) => {
     api
       .post('/api/documents/')
       .send(documentData.documenty)
@@ -69,7 +69,7 @@ describe('Document', () => {
       });
   });
 
-  it('All fields must be filled', (done) => {
+  it('all fields must be filled', (done) => {
     api
       .post('/api/documents/')
       .set('x-access-token', normalToken1)
@@ -81,7 +81,7 @@ describe('Document', () => {
       });
   });
 
-  it('Registered users can create documents', (done) => {
+  it('registered users can create documents', (done) => {
     api
       .post('/api/documents/')
       .set('x-access-token', normalToken1)
@@ -93,7 +93,7 @@ describe('Document', () => {
       });
   });
 
-  it('Should not allow creation of documents with duplicate titles', (done) => {
+  it('should not allow creation of documents with duplicate titles', (done) => {
     api
       .post('/api/documents/')
       .set('x-access-token', normalToken1)
@@ -114,6 +114,20 @@ describe('Document', () => {
       .end((err, res) => {
         expect(res.body.message).to.equal('Document created');
         expect(res.body.data).to.have.property('createdAt');
+        done(err);
+      });
+  });
+
+  it('should have a default access of public', (done) => {
+    api
+      .post('/api/documents/')
+      .set('x-access-token', normalToken2)
+      .send(documentData.documentz)
+      .expect(201)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Document created');
+        expect(res.body.data).to.have.property('access');
+        expect(res.body.data.access).to.equal('public');
         done(err);
       });
   });
@@ -211,7 +225,7 @@ describe('Document', () => {
 
   it('non-existent documents should return 404', (done) => {
     api
-      .get('/api/documents/13')
+      .get('/api/documents/20')
       .set('x-access-token', adminToken)
       .expect(404)
       .end((err, res) => {
@@ -227,7 +241,19 @@ describe('Document', () => {
       .expect(200)
       .end((err, res) => {
         expect(res.body.message).to.equal('Documents retreived');
-        expect(res.body.data.length).to.equal(12);
+        expect(res.body.data.length).to.equal(13);
+        done(err);
+      });
+  });
+
+  it('documents should ordered by date', (done) => {
+    api
+      .get('/api/documents')
+      .set('x-access-token', adminToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Documents retreived');
+        expect(res.body.data[0].createdAt).gte(res.body.data[1].createdAt);
         done(err);
       });
   });
@@ -239,19 +265,19 @@ describe('Document', () => {
       .expect(200)
       .end((err, res) => {
         expect(res.body.message).to.equal('Documents retreived');
-        expect(res.body.data.length).to.equal(9);
+        expect(res.body.data.length).to.equal(10);
         done(err);
       });
   });
 
-  it('Document gotten can be limited', (done) => {
+  it('document gotten can be limited', (done) => {
     api
       .get('/api/documents?limit=5')
       .set('x-access-token', adminToken)
       .expect(200)
       .end((err, res) => {
         expect(res.body.message).to.equal('Documents retreived');
-        expect(res.body.data.length).to.equal(5);
+        expect(res.body.data.length).to.be.at.most(5);
         done(err);
       });
   });
@@ -263,8 +289,8 @@ describe('Document', () => {
       .expect(200)
       .end((err, res) => {
         expect(res.body.message).to.equal('Documents retreived');
-        expect(res.body.data.length).to.equal(6);
-        expect(res.body.data[0].id).to.equal(3);
+        expect(res.body.data.length).to.be.at.most(6);
+        expect(res.body.data[0].id).to.equal(11);
         done(err);
       });
   });

@@ -1,7 +1,7 @@
 {
   * Newly created users should have a default role (Which would be the normal role) (done)
-  * Write a test that validates a document has a property “access” set as “public” by default (Implement this test)
-  * Put an offset time for each of the document's createdAt field
+  * Write a test that validates a document has a property “access” set as “public” by default (Implement this test) (done)
+  * Put an offset time for each of the document's createdAt field (not doing).
   * Test the published date of returned Documents
 }
 
