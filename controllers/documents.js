@@ -43,16 +43,6 @@ export default class DocumentsController {
           }];
         }
 
-        if (role.title !== 'admin') {
-          dbQuery.where = dbQuery.where || {};
-          dbQuery.where.$or = [{
-            access: 'public'
-          }, {
-            ownerId: decodedUser.id
-          }];
-        }
-
-
         docModel.findAll(dbQuery)
           .then((documents) => {
             if (documents.length > 0) {
@@ -145,9 +135,9 @@ export default class DocumentsController {
   }
 
   /**
-   * Show
+   * get
    *
-   * show method gets a document from the databse based on the id supplied
+   * get method gets a document from the databse based on the id supplied
    * to the method and the role of the requester
    *
    * @param  {Object} req express request object that is received from
@@ -156,7 +146,7 @@ export default class DocumentsController {
    * the requester
    * @return {null} doesn't return anything
    */
-  show(req, res) {
+  get(req, res) {
     const decodedUser = req.decoded;
     const docId = req.params.id;
 

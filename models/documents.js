@@ -12,6 +12,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     access: {
       type: DataTypes.STRING,
+      defaultValue: "public",
       allowNull: false
     },
     ownerRoleId: {

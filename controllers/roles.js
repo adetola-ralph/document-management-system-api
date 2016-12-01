@@ -39,9 +39,9 @@ export default class RoleController {
   }
 
   /**
-   * Show
+   * get
    *
-   * show method gets a role from the db depending on the id given in the link
+   * get method gets a role from the db depending on the id given in the link
    *
    * @param  {Object} req express request object that is received from
    * the requester
@@ -49,7 +49,7 @@ export default class RoleController {
    * the requester
    * @return {null} doesn't return anything
    */
-  show(req, res) {
+  get(req, res) {
     const roleId = req.params.id;
     models
       .Roles
@@ -89,7 +89,7 @@ export default class RoleController {
   create(req, res) {
     const roleTitle = req.body.title || req.query.title;
     if (!roleTitle) {
-      res.status(403).json({
+      res.status(400).json({
         success: false,
         message: 'Title cannot be empty'
       });
@@ -180,6 +180,33 @@ export default class RoleController {
   }
 
   delete(req, res) {
+    const roleId = req.params.id;
 
+    models
+      .Roles
+      .destroy({
+        where: {
+          id: roleId
+        }
+      })
+      .then((result) => {
+        if (result > 0) {
+          res.status(200).json({
+            success: true,
+            message: 'Role deleted'
+          });
+        } else {
+          res.status(404).json({
+            success: false,
+            message: 'Role doesn\'t exist'
+          });
+        }
+      }).catch((err) => {
+        res.status(500).json({
+          success: false,
+          message: 'Server error',
+          error: err
+        });
+      });
   }
 }

@@ -7,7 +7,6 @@ dotenv.config({ silent: true });
 const secret = process.env.SECRET;
 const userModel = models.Users;
 
-
  /**
   * UserController
   *
@@ -15,6 +14,14 @@ const userModel = models.Users;
   */
 export default class UserController {
 
+  constructor() {
+    this.create = this.create.bind(this);
+    this.index = this.index.bind(this);
+    this.delete = this.delete.bind(this);
+    this.update = this.update.bind(this);
+    this.get = this.get.bind(this);
+    this.createUser = this.createUser.bind(this);
+  }
   /**
    * Index
    *
@@ -63,12 +70,12 @@ export default class UserController {
   create(req, res) {
     const user = req.body;
     if (!UserHelper.checkDetails(req)) {
-      res.status(400)
+      return res.status(400)
         .json({
           success: false,
           message: 'All fields must be filled'
         });
-    } else {
+    } else if (user.roleId) {
       models.Roles.findById(user.roleId).then((role) => {
         if (!role) {
           return res.status(400)
@@ -82,56 +89,34 @@ export default class UserController {
             const decoded = jwt.verify(token, secret);
             if (decoded && decoded.roleId !== user.roleId) {
               return res.status(403)
-                .json({
+                .send({
                   success: false,
                   message: 'You must be an admin user to create another admin user'
                 });
+            } else {
+              this.createUser(user, res);
             }
           } else {
             return res.status(403)
-              .json({
+              .send({
                 success: false,
-                message: 'You must be authenticated to create an admin user'
+                message: 'You must be an admin user to create another admin user'
               });
           }
+        } else {
+          this.createUser(user, res);
         }
-        userModel
-          .findOne({
-            where: {
-              $or: [{ username: user.username }, { email: user.email }]
-            }
-          }).then((result) => {
-            if (!result) {
-              userModel
-                .create(user)
-                .then((newUser) => {
-                  res.status(201).json({
-                    success: true,
-                    message: 'User created',
-                    data: newUser
-                  });
-                });
-            } else {
-              res.status(409).json({
-                success: false,
-                message: 'User already exists'
-              });
-            }
-          }).catch((err) => {
-            res.status(500).json({
-              success: false,
-              message: 'Server error',
-              error: err
-            });
-          });
       });
+      return;
+    } else {
+      this.createUser(user, res);
     }
   }
 
   /**
-   * Show
+   * Get
    *
-   * show method returns a user matching the id parameter sent in the request
+   * get method returns a user matching the id parameter sent in the request
    * string. A non-admin user can only view their own user information
    *
    * @param  {Object} req express request object that is received from
@@ -140,7 +125,7 @@ export default class UserController {
    * the requester
    * @return {null} doesn't return anything
    */
-  show(req, res) {
+  get(req, res) {
     const userId = req.params.id;
     const decoded = req.decoded;
 
@@ -237,27 +222,69 @@ export default class UserController {
    */
   delete(req, res) {
     const userId = req.params.id;
+    const decoded = req.decoded;
 
-    if (userId === req.decoded.id) {
-      res.status(403).json({
+    models.Roles.findById(decoded.roleId).then((role) => {
+      if (decoded.id === Number(userId) || role.title === 'admin') {
+        userModel.destroy({
+          where: {
+            id: userId
+          }
+        }).then((result) => {
+          if (result > 0) {
+            res.status(200).json({
+              success: true,
+              message: 'User deleted'
+            });
+          } else {
+            res.status(404).json({
+              success: false,
+              message: 'User doesn\'t exist'
+            });
+          }
+        }).catch((err) => {
+          res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: err
+          });
+        });
+      } else {
+        res.status(403).json({
+          success: false,
+          message: 'Not authorised to perform this action'
+        });
+      }
+    }).catch((err) => {
+      res.status(500).json({
         success: false,
-        message: 'You\'re not allowed to perform this action'
+        message: 'Server error',
+        error: err
       });
-    } else {
-      userModel.destroy({
+    });
+  }
+
+  createUser(user, res) {
+    userModel
+      .findOne({
         where: {
-          id: userId
+          $or: [{ username: user.username }, { email: user.email }]
         }
       }).then((result) => {
-        if (result > 0) {
-          res.status(200).json({
-            success: true,
-            message: 'User deleted'
-          });
+        if (!result) {
+          userModel
+            .create(user)
+            .then((newUser) => {
+              res.status(201).json({
+                success: true,
+                message: 'User created',
+                data: newUser
+              });
+            });
         } else {
-          res.status(404).json({
+          res.status(409).json({
             success: false,
-            message: 'User doesn\'t exist'
+            message: 'User already exists'
           });
         }
       }).catch((err) => {
@@ -267,6 +294,5 @@ export default class UserController {
           error: err
         });
       });
-    }
   }
 }

@@ -4,6 +4,9 @@ const roleData = {
   },
   invalidRole: {
     titles: 'guest'
+  },
+  roleToDelete: {
+    title: 'limited'
   }
 };
 

@@ -32,7 +32,7 @@ export default class Authentication {
     if (token) {
       jwt.verify(token, secret, (err, decoded) => {
         if (err) {
-          res.status(403).json({
+          res.status(401).json({
             success: false,
             message: 'Invalid token'
           });
@@ -42,7 +42,7 @@ export default class Authentication {
         }
       });
     } else {
-      return res.status(403).send({
+      return res.status(401).send({
         success: false,
         message: 'Token not provided'
       });

@@ -17,9 +17,11 @@ export default class DocHelper {
    */
   static checkDocDetails(req) {
     const document = req.body;
-    if (!(document.title && document.content && document.access &&
-      (document.access === 'public' || document.access === 'private' || document.access === 'role'))) {
+    if (!(document.title && document.content)) {
       return false;
+    }
+    if (document.access && !(document.access === 'public' || document.access === 'private' || document.access === 'role')) {
+      return false
     }
     return true;
   }
@@ -48,6 +50,9 @@ export default class DocHelper {
     }
     if (queries.indexOf('limit') > -1) {
       dbQuery.limit = reqQuery.limit;
+    }
+    if (queries.indexOf('role') > -1) {
+      dbQuery.ownerRoleId = reqQuery.role;
     }
     if (queries.indexOf('date') > -1) {
       const nextDate = new Date(reqQuery.date);

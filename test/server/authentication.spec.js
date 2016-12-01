@@ -5,6 +5,7 @@ import userData from './data/user-data';
 
 const api = supertest(server);
 const expect = chai.expect;
+let signinToken;
 
 describe('User authentication', () => {
   it('should expect all fields to be filled', (done) => {
@@ -28,7 +29,7 @@ describe('User authentication', () => {
         username: userData.normalUser1.username,
         password: 'wrongpassword'
       })
-      .expect(403)
+      .expect(401)
       .end((err, res) => {
         expect(res.body.success).to.equal(false);
         expect(res.body.message).to.equal('Authentication failed: Wrong password');
@@ -48,6 +49,7 @@ describe('User authentication', () => {
         expect(res.body.success).to.equal(true);
         expect(res.body.message).to.equal('Authentication successful');
         expect(res.body).to.have.property('data');
+        signinToken = res.body.data;
         done(err);
       });
   });
@@ -59,10 +61,33 @@ describe('User authentication', () => {
         username: userData.invalidUSer1.username,
         password: userData.invalidUSer1.password
       })
-      .expect(404)
+      .expect(401)
       .end((err, res) => {
         expect(res.body.success).to.equal(false);
         expect(res.body.message).to.equal('Authentication failed: User not found');
+        done(err);
+      });
+  });
+
+  it('should return a message on signout for registered users', (done) => {
+    api
+      .get('/api/users/logout')
+      .set('x-access-token', signinToken)
+      .expect(200)
+      .end((err, res) => {
+        // expect(res.body.success).to.equal(true);
+        expect(res.body.message).to.equal('You have been logged out');
+        done(err);
+      });
+  });
+
+  it('should reject signout request from unregistered users', (done) => {
+    api
+      .get('/api/users/logout')
+      .expect(401)
+      .end((err, res) => {
+        expect(res.body.success).to.equal(false);
+        expect(res.body.message).to.equal('Token not provided');
         done(err);
       });
   });

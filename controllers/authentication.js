@@ -55,13 +55,13 @@ export default class AuthenticationController {
               data: token
             });
           } else {
-            res.status(403).json({
+            res.status(401).json({
               success: false,
               message: 'Authentication failed: Wrong password'
             });
           }
         } else {
-          res.status(404).json({
+          res.status(401).json({
             success: false,
             message: 'Authentication failed: User not found'
           });
@@ -74,5 +74,24 @@ export default class AuthenticationController {
         });
       });
     }
+  }
+
+
+  /**
+    * Signout
+    *
+    * signout method that handles users signing out of the application
+   *
+   * @param  {Object} req express request object that is received from
+   * the requester
+   * @param  {Object} res express response object that gets sent back to
+   * the requester
+   * @return {null} doesn't return anything
+   */
+  signout(req, res) {
+    res.status(200).json({
+      success: true,
+      message: 'You have been logged out'
+    });
   }
 }

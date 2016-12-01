@@ -3,6 +3,7 @@ import supertest from 'supertest';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import winston from 'winston';
+import request from 'superagent';
 import server from './../../index';
 import roleData from './data/role-data';
 import userData from './data/user-data';
@@ -60,7 +61,7 @@ describe('Roles', () => {
       .post('/api/roles/')
       .set('x-access-token', adminToken)
       .send(roleData.invalidRole)
-      .expect(403)
+      .expect(400)
       .end((err, res) => {
         expect(res.body.message).to.equal('Title cannot be empty');
         done(err);
@@ -137,6 +138,28 @@ describe('Roles', () => {
       });
   });
 
+  it('admin users should be able to delete a role', (done) => {
+    api
+      .delete('/api/roles/3')
+      .set('x-access-token', adminToken)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Role deleted');
+        done(err);
+      });
+  });
+
+  it('admin users shouldn\'t be able to delete a non-existent role', (done) => {
+    api
+      .delete('/api/roles/3')
+      .set('x-access-token', adminToken)
+      .expect(404)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('Role doesn\'t exist');
+        done(err);
+      });
+  });
+
   describe('Unauthorised users', () => {
     it('shouldn\'t be able to create new roles', (done) => {
       api
@@ -177,6 +200,17 @@ describe('Roles', () => {
         .put('/api/roles/2')
         .set('x-access-token', normalToken)
         .send({ title: 'regular' })
+        .expect(403)
+        .end((err, res) => {
+          expect(res.body.message).to.equal('Not authorised to perform this action');
+          done(err);
+        });
+    });
+
+    it('normal users shouldn\'t be able to delete a role', (done) => {
+      api
+        .delete('/api/roles/2')
+        .set('x-access-token', normalToken)
         .expect(403)
         .end((err, res) => {
           expect(res.body.message).to.equal('Not authorised to perform this action');

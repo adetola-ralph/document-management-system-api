@@ -16,6 +16,10 @@ const AuthController = new AuthenticationController();
  * @return {null} doesn't return anything
  */
 export default function userRoutes(router) {
+  // route that deals with user signin
+  router.post('/users/login', AuthController.signin);
+  router.get('/users/logout', Authentication.checkAuthentication, AuthController.signout);
+
   router
     .route('/users')
     .post(UserCtr.create)
@@ -23,10 +27,7 @@ export default function userRoutes(router) {
 
   router
     .route('/users/:id')
-    .get(Authentication.checkAuthentication, UserCtr.show)
+    .get(Authentication.checkAuthentication, UserCtr.get)
     .put(Authentication.checkAuthentication, UserCtr.update)
-    .delete(Authentication.checkAuthentication, Authorisation.checkAuthorisation, UserCtr.delete);
-
-  // route that deals with user signin
-  router.post('/users/login', AuthController.signin);
+    .delete(Authentication.checkAuthentication, UserCtr.delete);
 }

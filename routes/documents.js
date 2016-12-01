@@ -21,7 +21,7 @@ export default function documentRoutes(router) {
 
   router
     .route('/documents/:id')
-    .get(Authentication.checkAuthentication, DocCtr.show)
+    .get(Authentication.checkAuthentication, DocCtr.get)
     .put(Authentication.checkAuthentication, DocCtr.update)
     .delete(Authentication.checkAuthentication, DocCtr.delete);
 
