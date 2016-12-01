@@ -43,16 +43,6 @@ export default class DocumentsController {
           }];
         }
 
-        if (role.title !== 'admin') {
-          dbQuery.where = dbQuery.where || {};
-          dbQuery.where.$or = [{
-            access: 'public'
-          }, {
-            ownerId: decodedUser.id
-          }];
-        }
-
-
         docModel.findAll(dbQuery)
           .then((documents) => {
             if (documents.length > 0) {

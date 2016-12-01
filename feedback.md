@@ -4,7 +4,6 @@
   * Test the published date of returned Documents(done)
 }
 
-** Preference for PascalCase
 * Move check for authentication and authorisation to the mount point
 * Implement signout (done)
 * Implement Implement user deleting yourself (done)
