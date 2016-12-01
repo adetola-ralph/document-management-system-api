@@ -145,9 +145,9 @@ export default class DocumentsController {
   }
 
   /**
-   * Show
+   * get
    *
-   * show method gets a document from the databse based on the id supplied
+   * get method gets a document from the databse based on the id supplied
    * to the method and the role of the requester
    *
    * @param  {Object} req express request object that is received from

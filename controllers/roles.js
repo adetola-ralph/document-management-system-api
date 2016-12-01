@@ -39,9 +39,9 @@ export default class RoleController {
   }
 
   /**
-   * Show
+   * get
    *
-   * show method gets a role from the db depending on the id given in the link
+   * get method gets a role from the db depending on the id given in the link
    *
    * @param  {Object} req express request object that is received from
    * the requester

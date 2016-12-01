@@ -5,8 +5,7 @@ const userData = {
     lastname: 'Olutola',
     username: 'adetolaraphael',
     email: 'oreofe.olutola@gmail.com',
-    password: 'Pasword1234',
-    roleId: 2
+    password: 'Pasword1234'
   },
   // user with normal role 2
   normalUser2: {

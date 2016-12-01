@@ -42,7 +42,7 @@ describe('User', () => {
       });
   });
 
-  it('should create a new user', (done) => {
+  it('should create a new user with default role', (done) => {
     api
       .post('/api/users/')
       .send(userData.normalUser1)
@@ -50,6 +50,7 @@ describe('User', () => {
       .end((err, res) => {
         expect(res.body.message).to.equal('User created');
         expect(res.body.data).to.have.property('id');
+        expect(res.body.data).to.have.property('roleId');
         done(err);
       });
   });
@@ -60,7 +61,7 @@ describe('User', () => {
       .send(userData.adminUser2)
       .expect(403)
       .end((err, res) => {
-        expect(res.body.message).to.equal('You must be authenticated to create an admin user');
+        expect(res.body.message).to.equal('You must be an admin user to create another admin user');
         done(err);
       });
   });
@@ -268,7 +269,7 @@ describe('User', () => {
       });
   });
 
-  it('normal users shouldn be able to delete themselves', (done) => {
+  it('normal users should be able to delete themselves', (done) => {
     api
       .delete('/api/users/5')
       .set('x-access-token', normalTokenToDelete)
