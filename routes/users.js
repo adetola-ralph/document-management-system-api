@@ -23,7 +23,7 @@ export default function userRoutes(router) {
 
   router
     .route('/users/:id')
-    .get(Authentication.checkAuthentication, UserCtr.show)
+    .get(Authentication.checkAuthentication, UserCtr.get)
     .put(Authentication.checkAuthentication, UserCtr.update)
     .delete(Authentication.checkAuthentication, Authorisation.checkAuthorisation, UserCtr.delete);
 

@@ -140,7 +140,7 @@ export default class UserController {
    * the requester
    * @return {null} doesn't return anything
    */
-  show(req, res) {
+  get(req, res) {
     const userId = req.params.id;
     const decoded = req.decoded;
 

@@ -28,7 +28,7 @@ describe('User authentication', () => {
         username: userData.normalUser1.username,
         password: 'wrongpassword'
       })
-      .expect(403)
+      .expect(401)
       .end((err, res) => {
         expect(res.body.success).to.equal(false);
         expect(res.body.message).to.equal('Authentication failed: Wrong password');
@@ -59,7 +59,7 @@ describe('User authentication', () => {
         username: userData.invalidUSer1.username,
         password: userData.invalidUSer1.password
       })
-      .expect(404)
+      .expect(401)
       .end((err, res) => {
         expect(res.body.success).to.equal(false);
         expect(res.body.message).to.equal('Authentication failed: User not found');

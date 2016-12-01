@@ -61,7 +61,7 @@ describe('Roles', () => {
       .post('/api/roles/')
       .set('x-access-token', adminToken)
       .send(roleData.invalidRole)
-      .expect(403)
+      .expect(400)
       .end((err, res) => {
         expect(res.body.message).to.equal('Title cannot be empty');
         done(err);

@@ -156,7 +156,7 @@ export default class DocumentsController {
    * the requester
    * @return {null} doesn't return anything
    */
-  show(req, res) {
+  get(req, res) {
     const decodedUser = req.decoded;
     const docId = req.params.id;
 

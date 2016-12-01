@@ -55,13 +55,13 @@ export default class AuthenticationController {
               data: token
             });
           } else {
-            res.status(403).json({
+            res.status(401).json({
               success: false,
               message: 'Authentication failed: Wrong password'
             });
           }
         } else {
-          res.status(404).json({
+          res.status(401).json({
             success: false,
             message: 'Authentication failed: User not found'
           });

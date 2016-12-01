@@ -5,9 +5,9 @@
 * Test the published date of returned Documents
 * remove duplicate code in index function of document controller
 ** Preference for PascalCase
-* Change show to getting
-* Implement delete method for roles
+* Change show to get (done)
+* Implement delete method for roles - Done
 * Move check for authentication and authorisation to the mount point
-* Change 403 status code on create role method
-* Unauthorised in signin method
+* Change 403 status code on create role method (done)
+* Unauthorised in signin method (done)
 * Implement signout

@@ -62,7 +62,7 @@ describe('Document', () => {
     api
       .post('/api/documents/')
       .send(documentData.documenty)
-      .expect(403)
+      .expect(401)
       .end((err, res) => {
         expect(res.body.message).to.equal('Token not provided');
         done(err);

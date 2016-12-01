@@ -49,7 +49,7 @@ export default class RoleController {
    * the requester
    * @return {null} doesn't return anything
    */
-  show(req, res) {
+  get(req, res) {
     const roleId = req.params.id;
     models
       .Roles
@@ -89,7 +89,7 @@ export default class RoleController {
   create(req, res) {
     const roleTitle = req.body.title || req.query.title;
     if (!roleTitle) {
-      res.status(403).json({
+      res.status(400).json({
         success: false,
         message: 'Title cannot be empty'
       });
