@@ -269,23 +269,6 @@ describe('Document', () => {
       });
   });
 
-  it('date can be set for documents search', (done) => {
-    const d = new Date();
-    const day = d.getDate();
-    const month = d.getMonth() + 1;
-    const year = d.getFullYear();
-    const date = `${year}-${month}-${day}`;
-    api
-      .get(`/api/documents?limit=4&date=${date}`)
-      .set('x-access-token', adminToken)
-      .expect(200)
-      .end((err, res) => {
-        expect(res.body.message).to.equal('Documents retreived');
-        expect(res.body.data.length).to.be.at.most(4);
-        done(err);
-      });
-  });
-
   it('users should be able to update their document', (done) => {
     api
       .put('/api/documents/5')
