@@ -25,8 +25,9 @@ export default function userRoutes(router) {
     .route('/users/:id')
     .get(Authentication.checkAuthentication, UserCtr.get)
     .put(Authentication.checkAuthentication, UserCtr.update)
-    .delete(Authentication.checkAuthentication, Authorisation.checkAuthorisation, UserCtr.delete);
+    .delete(Authentication.checkAuthentication, UserCtr.delete);
 
   // route that deals with user signin
   router.post('/users/login', AuthController.signin);
+  router.get('/users/logout', Authentication.checkAuthentication, AuthController.signout);
 }

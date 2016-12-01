@@ -12,6 +12,7 @@ dotenv.config({ silent: true });
 
 let adminToken;
 let normalToken;
+let normalTokenToDelete;
 
 before(() => {
   adminToken = jwt.sign({ username: 'gberikon', roleId: 1 }, secret, {
@@ -20,6 +21,11 @@ before(() => {
   const normalUser = userData.normalUser3;
   normalUser.id = 2;
   normalToken = jwt.sign(normalUser, secret, {
+    expiresIn: '24h'
+  });
+  const normalUserToDelete = userData.normalUser2;
+  normalUserToDelete.id = 5;
+  normalTokenToDelete = jwt.sign(normalUserToDelete, secret, {
     expiresIn: '24h'
   });
 });
@@ -251,13 +257,24 @@ describe('User', () => {
       });
   });
 
-  it('normal users shouldn\'t be able to delete a user', (done) => {
+  it('normal users shouldn\'t be able to delete another user', (done) => {
     api
       .delete('/api/users/3')
       .set('x-access-token', normalToken)
       .expect(403)
       .end((err, res) => {
         expect(res.body.message).to.equal('Not authorised to perform this action');
+        done(err);
+      });
+  });
+
+  it('normal users shouldn be able to delete themselves', (done) => {
+    api
+      .delete('/api/users/5')
+      .set('x-access-token', normalTokenToDelete)
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.message).to.equal('User deleted');
         done(err);
       });
   });

@@ -8,6 +8,7 @@
 ** Preference for PascalCase
 * Move check for authentication and authorisation to the mount point
 * Implement signout
+* Implement Implement user deleting yourself (done)
 * Unauthorised in signin method (done)
 * Change show to get (done)
 * Implement delete method for roles (done)

@@ -14,7 +14,6 @@ const userModel = models.Users;
   * controller class that handles actions to be taken out on the user resource
   */
 export default class UserController {
-
   /**
    * Index
    *
@@ -237,36 +236,45 @@ export default class UserController {
    */
   delete(req, res) {
     const userId = req.params.id;
+    const decoded = req.decoded;
 
-    if (userId === req.decoded.id) {
-      res.status(403).json({
-        success: false,
-        message: 'You\'re not allowed to perform this action'
-      });
-    } else {
-      userModel.destroy({
-        where: {
-          id: userId
-        }
-      }).then((result) => {
-        if (result > 0) {
-          res.status(200).json({
-            success: true,
-            message: 'User deleted'
-          });
-        } else {
-          res.status(404).json({
+    models.Roles.findById(decoded.roleId).then((role) => {
+      if (decoded.id === Number(userId) || role.title === 'admin') {
+        userModel.destroy({
+          where: {
+            id: userId
+          }
+        }).then((result) => {
+          if (result > 0) {
+            res.status(200).json({
+              success: true,
+              message: 'User deleted'
+            });
+          } else {
+            res.status(404).json({
+              success: false,
+              message: 'User doesn\'t exist'
+            });
+          }
+        }).catch((err) => {
+          res.status(500).json({
             success: false,
-            message: 'User doesn\'t exist'
+            message: 'Server error',
+            error: err
           });
-        }
-      }).catch((err) => {
-        res.status(500).json({
-          success: false,
-          message: 'Server error',
-          error: err
         });
+      } else {
+        res.status(403).json({
+          success: false,
+          message: 'Not authorised to perform this action'
+        });
+      }
+    }).catch((err) => {
+      res.status(500).json({
+        success: false,
+        message: 'Server error',
+        error: err
       });
-    }
+    });
   }
 }
