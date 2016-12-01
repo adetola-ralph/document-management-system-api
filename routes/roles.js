@@ -23,5 +23,5 @@ export default function roleRoutes(router) {
     .route('/roles/:id')
     .get(Authentication.checkAuthentication, Authorisation.checkAuthorisation, RoleCtr.show)
     .put(Authentication.checkAuthentication, Authorisation.checkAuthorisation, RoleCtr.update)
-    .delete(RoleCtr.delete);
+    .delete(Authentication.checkAuthentication, Authorisation.checkAuthorisation, RoleCtr.delete);
 }
