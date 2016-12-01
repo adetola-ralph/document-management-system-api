@@ -89,6 +89,9 @@ export default class AuthenticationController {
    * @return {null} doesn't return anything
    */
   signout(req, res) {
-
+    res.status(200).json({
+      success: true,
+      message: 'You have been logged out'
+    });
   }
 }
