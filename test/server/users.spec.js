@@ -42,7 +42,7 @@ describe('User', () => {
       });
   });
 
-  it('should create a new user with default role', (done) => {
+  it('should create a new user with default role and a token', (done) => {
     api
       .post('/api/users/')
       .send(userData.normalUser1)
@@ -51,6 +51,7 @@ describe('User', () => {
         expect(res.body.message).to.equal('User created');
         expect(res.body.data).to.have.property('id');
         expect(res.body.data).to.have.property('roleId');
+        expect(res.body.token).to.exist;
         done(err);
       });
   });

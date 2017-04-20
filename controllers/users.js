@@ -13,7 +13,6 @@ const userModel = models.Users;
   * controller class that handles actions to be taken out on the user resource
   */
 export default class UserController {
-
   constructor() {
     this.create = this.create.bind(this);
     this.index = this.index.bind(this);
@@ -21,6 +20,7 @@ export default class UserController {
     this.update = this.update.bind(this);
     this.get = this.get.bind(this);
     this.createUser = this.createUser.bind(this);
+    this.registerUser = this.registerUser.bind(this);
   }
   /**
    * Index
@@ -76,6 +76,8 @@ export default class UserController {
           message: 'All fields must be filled'
         });
     } else if (user.roleId) {
+      // this can only happen if the role was specified
+      // so this cannot happen on registration page
       models.Roles.findById(user.roleId).then((role) => {
         if (!role) {
           return res.status(400)
@@ -94,6 +96,7 @@ export default class UserController {
                   message: 'You must be an admin user to create another admin user'
                 });
             } else {
+              // if the user created and the creating user are admins
               this.createUser(user, res);
             }
           } else {
@@ -104,12 +107,16 @@ export default class UserController {
               });
           }
         } else {
+          // if the role is not an admin
           this.createUser(user, res);
         }
       });
       return;
     } else {
-      this.createUser(user, res);
+      // if the role is not an admin
+      // this.createUser(user, res);
+      // create and send a token
+      this.registerUser(user, res);
     }
   }
 
@@ -279,6 +286,42 @@ export default class UserController {
                 success: true,
                 message: 'User created',
                 data: newUser
+              });
+            });
+        } else {
+          res.status(409).json({
+            success: false,
+            message: 'User already exists'
+          });
+        }
+      }).catch((err) => {
+        res.status(500).json({
+          success: false,
+          message: 'Server error',
+          error: err
+        });
+      });
+  }
+
+  registerUser(user, res) {
+    userModel
+      .findOne({
+        where: {
+          $or: [{ username: user.username }, { email: user.email }]
+        }
+      }).then((result) => {
+        if (!result) {
+          userModel
+            .create(user)
+            .then((newUser) => {
+              const token = jwt.sign(newUser.dataValues, secret, {
+                expiresIn: '24h'
+              });
+              res.status(201).json({
+                success: true,
+                message: 'User created',
+                data: newUser.dataValues,
+                token
               });
             });
         } else {
