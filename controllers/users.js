@@ -320,7 +320,8 @@ export default class UserController {
               res.status(201).json({
                 success: true,
                 message: 'User created',
-                data: token
+                data: newUser.dataValues,
+                token
               });
             });
         } else {
